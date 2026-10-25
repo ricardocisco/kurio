@@ -25,6 +25,12 @@ export async function openApp(page: Page, path = '/', scenario: MockScenario = '
   await expect.poll(() => page.evaluate(() => Boolean(window.__kurioMocks))).toBe(true);
 }
 
+export async function waitForRealtime(page: Page) {
+  await expect
+    .poll(() => page.evaluate(() => window.__kurioMocks?.realtime.connectionCount() ?? 0))
+    .toBeGreaterThan(0);
+}
+
 export function catalogCards(page: Page) {
   return page.getByRole('region', { name: /catálogo|todos os nfts/i }).getByRole('article');
 }
@@ -42,6 +48,13 @@ declare global {
       expireSessions: () => void;
       setEditionPrice: (nftId: string, editionId: string, price: string) => void;
       setEditionAvailability: (nftId: string, editionId: string, available: number) => void;
+      realtime: {
+        setAvailable: (available: boolean) => void;
+        connectionCount: () => number;
+        replayLastEvent: () => void;
+        emitStaleNftEvent: (nftId: string, price: string) => void;
+        emitForeignOrderEvent: (orderId: string) => void;
+      };
     };
   }
 }

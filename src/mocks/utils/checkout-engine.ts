@@ -4,6 +4,8 @@ import type { NetworkId } from '@/shared/contracts/nft';
 import type { Order } from '@/shared/contracts/orders';
 
 import { readDatabase, updateDatabase, type DatabaseState, type OrderRecord } from '../db/database';
+import { createNftUpdatedEvent, createOrderUpdatedEvent } from '../realtime/events';
+import { onRealtimeSubscription, publishRealtimeEvent } from '../realtime/socket-server';
 
 import { buildCart, emptyCartRecord } from './cart-builder';
 
@@ -97,6 +99,35 @@ function applyConfirmedOrder(draft: DatabaseState, record: OrderRecord): void {
   }
 }
 
+const scheduledOrders = new Set<string>();
+
+export function scheduleOrderResolution(orderId: string): void {
+  const record = readDatabase().orders[orderId];
+  if (record?.order.status !== 'pending' || scheduledOrders.has(orderId)) return;
+  scheduledOrders.add(orderId);
+  const delayMs = Math.max(0, new Date(record.resolveAt).getTime() - Date.now());
+  setTimeout(() => {
+    scheduledOrders.delete(orderId);
+    resolveOrderIfDue(orderId);
+  }, delayMs);
+}
+
+onRealtimeSubscription((userId) => {
+  Object.entries(readDatabase().orders)
+    .filter(([, record]) => record.userId === userId && record.order.status === 'pending')
+    .forEach(([orderId]) => scheduleOrderResolution(orderId));
+});
+
+function publishOrderResolution(record: OrderRecord): void {
+  publishRealtimeEvent(createOrderUpdatedEvent(record.order, record.userId));
+  if (record.order.status !== 'confirmed') return;
+  const { nfts } = readDatabase();
+  for (const nftId of new Set(record.order.lines.map((line) => line.nftId))) {
+    const nft = nfts.find((item) => item.id === nftId);
+    if (nft) publishRealtimeEvent(createNftUpdatedEvent(nft));
+  }
+}
+
 export function resolveOrderIfDue(orderId: string): Order | undefined {
   const record = readDatabase().orders[orderId];
   if (!record) return undefined;
@@ -104,9 +135,9 @@ export function resolveOrderIfDue(orderId: string): Order | undefined {
     return record.order;
   }
 
-  return updateDatabase((draft) => {
+  const resolved = updateDatabase((draft) => {
     const target = draft.orders[orderId];
-    if (target?.order.status !== 'pending') return target?.order;
+    if (target?.order.status !== 'pending') return null;
     const now = new Date().toISOString();
     if (target.outcome === 'confirmed') {
       const hash = fakeTransactionHash(target.order.id);
@@ -131,6 +162,10 @@ export function resolveOrderIfDue(orderId: string): Order | undefined {
         declineReason: 'A rede recusou a transação: saldo insuficiente na carteira simulada.',
       };
     }
-    return target.order;
+    return structuredClone(target);
   });
+
+  if (!resolved) return readDatabase().orders[orderId]?.order;
+  publishOrderResolution(resolved);
+  return resolved.order;
 }

@@ -5,6 +5,7 @@ import { SiteLayout } from '@/app/layout/SiteLayout';
 import type { RouterContext } from '@/app/router';
 import { SessionWatcher } from '@/features/auth/components/SessionWatcher';
 import { CartSessionSync } from '@/features/cart/components/CartSessionSync';
+import { RealtimeConnector } from '@/features/realtime/components/RealtimeConnector';
 
 const Devtools = import.meta.env.DEV ? lazy(() => import('@/app/devtools/Devtools')) : () => null;
 
@@ -21,6 +22,7 @@ function RootComponent() {
       <HeadContent />
       <SessionWatcher />
       <CartSessionSync />
+      <RealtimeConnector />
       <SiteLayout>
         <Outlet />
       </SiteLayout>

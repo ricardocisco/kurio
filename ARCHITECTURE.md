@@ -164,12 +164,32 @@ Próximos contratos (sessão, favoritos, carrinho, cotação, pedidos, perfil, c
 2. O usuário **conecta a carteira** (simulada pela API: pode ser recusada) e pode desconectá-la. "Confirmar e pagar" só fica disponível com a carteira conectada.
 3. **Envio:** `POST /orders` com uma `Idempotency-Key` gerada para aquela combinação de cotação, conexão e dados. O servidor recalcula o carrinho e compara com a cotação. Se algo mudou (preço, cupom, taxa, quantidade) ou a cotação expirou, responde `QUOTE_OUTDATED` com uma cotação nova; a interface destaca os itens alterados e exige "Confirmar novos valores e pagar" (com uma chave nova, pois o conteúdo mudou).
 4. **Falhas transitórias** (timeout, rede, 5xx) reenviam automaticamente a mesma requisição com a mesma chave, até 3 tentativas, avisando "Verificando o mesmo pedido, sem criar outra compra". O servidor devolve o pedido já criado. O botão fica bloqueado durante o envio e um _ref_ impede envios concorrentes; mesmo um clique duplo que escape gera no máximo um pedido.
-5. **Pendente:** o pedido nasce `pending` e é resolvido pelo servidor após ~2,5 s (`confirmed` ou, no cenário `payment-declined`, `declined`). O cliente acompanha por polling de 1 s (a fase 3 adiciona `order.updated` por Socket.IO). Estados finais não mudam mais.
+5. **Pendente:** o pedido nasce `pending` e é resolvido pelo servidor após ~2,5 s (`confirmed` ou, no cenário `payment-declined`, `declined`). O cliente recebe `order.updated` por Socket.IO; o polling só assume (1 s) quando o tempo real está desconectado, com uma verificação de segurança a cada 10 s quando conectado. Estados finais não mudam mais.
 6. **Recuperação:** a tentativa (`chave + requisição + orderId`) fica no `localStorage`, por usuário. Ao recarregar a página, o checkout retoma o pedido pendente ou reenvia a mesma requisição com a mesma chave, sem duplicar a compra.
 7. **Confirmação:** só com `status: confirmed` vindo da API o usuário vai para o recibo. O servidor baixa o estoque e remove do carrinho **apenas as quantidades compradas** (itens adicionados durante o processamento permanecem). Em recusa ou erro, o carrinho fica intacto.
 8. **Sessão expirada:** os dados do formulário ficam em `sessionStorage` (por usuário). O 401 leva ao login com `reason=expired` e o retorno ao `/checkout` restaura o rascunho.
 
 **Recibo:** renderizado só a partir do `Order` (snapshot de itens, preços, cupom, taxa, total, carteira e transação). Mudanças posteriores no catálogo não alteram o recibo. Hash e link do explorador são simulados.
+
+## Tempo real (Socket.IO)
+
+**Transporte.** `socket.io-client` (carregado sob demanda, fora do bundle inicial) conecta em `VITE_SOCKET_URL` só por WebSocket. No ambiente simulado, o MSW intercepta o WebSocket e `@mswjs/socket.io-binding` fala o protocolo Socket.IO (`src/mocks/realtime/socket-server.ts`). Trocar pelo servidor real exige só a URL.
+
+**Contrato** (`shared/contracts/events.ts`, validado com zod na chegada): todo evento tem `eventId`, `type`, `resource`, `resourceId`, `version` (versão monotônica do recurso no servidor), `occurredAt`, `userId` (`null` = público) e `payload`.
+
+| Evento                                      | Escopo             | Payload                                      | Efeito no cliente                                                                                                                                                                         |
+| ------------------------------------------- | ------------------ | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `nft.updated`                               | público            | preço, `isSoldOut`, preço/estoque por edição | Atualiza detalhe, listas, destaques, relacionados e favoritos no cache; invalida o carrinho e avisa (toast + leitor de tela) se o item está nele; a revisão do checkout pede nova cotação |
+| `order.updated`                             | privado            | `Order` completo                             | Grava no cache do pedido; o checkout segue para o recibo sem esperar o polling                                                                                                            |
+| `session.subscribe` / `session.unsubscribe` | cliente → servidor | `{ token }`                                  | Associa a conexão ao usuário (validado no servidor); feito ao conectar, no login e no logout                                                                                              |
+
+**Garantias de ordem e duplicidade.** `EventLedger` descarta evento com `eventId` já visto e evento com `version` menor ou igual à última aceita para o recurso. Além disso, cada atualização de cache só é aplicada se a versão do evento for maior que a do dado em cache, então uma resposta REST mais nova nunca é sobrescrita por um evento antigo. Eventos privados com `userId` diferente do usuário atual são ignorados, mesmo que cheguem por engano.
+
+**Reconexão.** Ao reconectar, o cliente re-assina a sessão e invalida NFTs, carrinho e pedidos (eventos perdidos durante a queda são recuperados pelo REST, que é a fonte da verdade). Enquanto desconectado, aparece o aviso "Atualizações em tempo real pausadas" e o pedido pendente volta ao polling de 1 s. No logout, a conexão é desassociada e o ledger é zerado.
+
+**Preço mudou durante a revisão.** Se chega `nft.updated` de um item da cotação aberta, o checkout pede uma cotação nova; se o total ou algum preço mudou, mostra "Valores atualizados" com o aviso e exige confirmar de novo. Se a edição esgotou, encaminha ao carrinho. O servidor continua validando a cotação no `POST /orders` (`QUOTE_OUTDATED`), então o evento só antecipa o aviso.
+
+**Controles no console:** `__kurioMocks.realtime.setAvailable(false|true)`, `.replayLastEvent()`, `.emitStaleNftEvent(nftId, price)`, `.emitForeignOrderEvent(orderId)`, `.connectionCount()`.
 
 ## Carrinho
 
@@ -242,4 +262,6 @@ Próximos contratos (sessão, favoritos, carrinho, cotação, pedidos, perfil, c
 - Performance mobile abaixo da meta (76–79); causa e plano em `docs/PLAN.md`.
 
 - A binding `@mswjs/socket.io-binding` exige MSW 2.x; o projeto fixa `msw@^2.15`.
+- O tempo real simulado roda dentro da aba (MSW): eventos só chegam à própria aba. Mudanças feitas em outra aba aparecem via REST (foco/reconexão). Com servidor real, todas as abas receberiam.
+- O servidor simulado não guarda histórico para replay após queda; a reconciliação é feita por refetch.
 - O chunk principal ainda é grande (~180 kB gzip) e o MSW adiciona ~165 kB gzip antes do primeiro render. Otimização prevista na fase 6.

@@ -15,6 +15,7 @@ import {
   type WalletConnection,
 } from '@/shared/contracts/checkout';
 import type { Order } from '@/shared/contracts/orders';
+import { onAcceptedNftUpdate } from '@/shared/realtime/realtime-bus';
 
 import { connectWallet, createOrder, createQuote, disconnectWallet } from '../api/checkout.api';
 import {
@@ -52,6 +53,13 @@ function sleep(ms: number) {
 
 function errorMessage(error: unknown, fallback: string): string {
   return isApiError(error) ? error.message : fallback;
+}
+
+function quoteFingerprint(quote: CheckoutQuote): string {
+  return JSON.stringify([
+    quote.summary.total,
+    quote.lines.map((line) => [line.lineId, line.unitPrice, line.quantity]),
+  ]);
 }
 
 function toCollector(form: CheckoutFormOutput): CreateOrderInput['collector'] {
@@ -195,6 +203,35 @@ export function useCheckoutFlow(userId: string) {
     const timer = setTimeout(() => void submit(attempt.request, attempt.idempotencyKey, null), 0);
     return () => clearTimeout(timer);
   }, [state.step, submit, userId]);
+
+  const reviewQuote = state.step === 'review' ? state.quote : null;
+
+  useEffect(() => {
+    if (!reviewQuote) return;
+    return onAcceptedNftUpdate((event) => {
+      const line = reviewQuote.lines.find((item) => item.nftId === event.payload.nftId);
+      if (!line) return;
+      createQuote({ network: reviewQuote.network })
+        .then((fresh) => {
+          setState((current) => {
+            if (current.step !== 'review' || current.quote.id !== reviewQuote.id) return current;
+            if (quoteFingerprint(fresh) === quoteFingerprint(current.quote)) return current;
+            const notice = `O preço de ${line.name} mudou durante a revisão. Confira os novos valores.`;
+            announce(notice);
+            return { ...current, quote: fresh, previousQuote: current.quote, notice };
+          });
+        })
+        .catch((error: unknown) => {
+          if (!isApiError(error) || error.code !== 'AVAILABILITY_CONFLICT') return;
+          refreshPurchaseData();
+          setState((current) =>
+            current.step === 'review' && current.quote.id === reviewQuote.id
+              ? { step: 'failed', message: error.message, action: 'cart' }
+              : current,
+          );
+        });
+    });
+  }, [refreshPurchaseData, reviewQuote]);
 
   const startReview = useCallback(
     async (form: CheckoutFormOutput) => {

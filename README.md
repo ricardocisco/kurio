@@ -7,7 +7,7 @@ React + TypeScript com TanStack Router/Query, Axios, Socket.IO, Tailwind CSS, sh
 - Arquitetura, contratos e decisões: [`ARCHITECTURE.md`](ARCHITECTURE.md)
 - Cenários e controle dos mocks: [`docs/MOCKS.md`](docs/MOCKS.md)
 
-> Status: **todas as telas do escopo implementadas** (106 testes E2E). Próximas fases: tempo real com Socket.IO, polimento, performance e documentação final. Demo: https://kurio-six.vercel.app
+> Status: **todas as telas do escopo implementadas, com tempo real via Socket.IO** (118 testes E2E). Próximas fases: polimento visual, performance e documentação final. Demo: https://kurio-six.vercel.app
 
 ## Requisitos
 
@@ -83,6 +83,8 @@ __kurioMocks.scenarios; // lista com descrições
 __kurioMocks.setScenario('slow'); // troca o cenário sem recarregar
 __kurioMocks.reset(); // restaura todas as fixtures (recarregue a página em seguida)
 __kurioMocks.expireSessions(); // expira todas as sessões no servidor simulado
+__kurioMocks.realtime.setAvailable(false); // derruba o Socket.IO (true para voltar)
+__kurioMocks.realtime.replayLastEvent(); // reenvia o último evento (deve ser ignorado)
 ```
 
 ## Reproduzindo fluxos de falha (catálogo)
@@ -110,7 +112,7 @@ Também é possível criar contas novas em `/register`. As senhas ficam no mock 
 4. **Expiração:** logado, rode `__kurioMocks.expireSessions()` no console e navegue para uma página privada (ou abra `?scenario=session-expired`).
 5. **Troca de usuário:** saia pelo menu da conta e entre com o outro usuário.
 6. **Cupons:** `KURIO10` (10%) e `GENESIS5` (5%) são válidos, `VERAO25` está expirado e qualquer outro código é inválido.
-7. **Preço e estoque alterados:** com itens no carrinho, rode `__kurioMocks.setEditionPrice('emerald-ape-0042', 'emerald-ape-0042-1-50', '1.29')` ou `__kurioMocks.setEditionAvailability('ivory-baron-0088', 'ivory-baron-0088-1-50', 4)` e recarregue o carrinho.
+7. **Preço e estoque alterados:** com itens no carrinho, rode `__kurioMocks.setEditionPrice('emerald-ape-0042', 'emerald-ape-0042-1-50', '1.29')` ou `__kurioMocks.setEditionAvailability('ivory-baron-0088', 'ivory-baron-0088-1-50', 4)`. O carrinho, o detalhe e a revisão do checkout atualizam na hora via Socket.IO, sem recarregar.
 8. **Compra:** entre como Nova, abra `/checkout`, clique em "Confirmar compra", conecte a carteira e pague. O pedido fica pendente por ~2,5 s e abre o recibo.
 9. **Falhas de compra:** repita com `?scenario=price-change-at-checkout`, `sold-out-at-checkout`, `payment-declined`, `order-timeout`, `wallet-rejected` ou `wallet-disconnects`. Recarregar a página com um pedido pendente retoma o mesmo pedido.
 10. **Perfil e carteiras:** em `/account/profile` e `/account/wallets`. Tente o usuário `rafa.lima` (conflito), um endereço `0x123` (inválido) ou a senha atual errada.

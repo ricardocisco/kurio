@@ -146,14 +146,16 @@ Convenções:
    - [x] Troca de senha validando a senha atual (hash + salt no mock).
    - [x] Carteira principal e secundária (cópia da principal, edição e remoção), usadas no checkout.
 
-### Fase 3: Tempo real
+### Fase 3: Tempo real ✅
 
-- [ ] Envelope de evento `{ eventId, type, resource, resourceId, version, userId?, occurredAt, payload }`.
-- [ ] Registro de `eventId` processados + última `version` por recurso (descarta duplicados e antigos).
-- [ ] `nft.updated` atualiza catálogo, detalhe e carrinho via `queryClient.setQueryData` com checagem de versão.
-- [ ] Reconexão → `invalidateQueries` dos recursos ativos (reconciliação com REST).
-- [ ] Logout → `socket.disconnect()`, `queryClient.clear()` e descarte de eventos de outro `userId`.
-- [ ] Cenário: NFT no carrinho muda de preço → aviso acessível → resumo atualizado → checkout bloqueia cotação desatualizada.
+- [x] Envelope de evento `{ eventId, type, resource, resourceId, version, userId, occurredAt, payload }` validado com zod.
+- [x] `EventLedger`: `eventId` processados + última `version` por recurso (descarta duplicados e antigos).
+- [x] `nft.updated` atualiza catálogo, destaques, detalhe, relacionados e favoritos via `setQueryData` com checagem de versão; carrinho invalidado com aviso acessível.
+- [x] `order.updated` privado (assinatura por token); polling vira fallback quando desconectado.
+- [x] Reconexão → re-assinatura + `invalidateQueries` de NFTs, carrinho e pedidos; aviso de conexão pausada.
+- [x] Logout → desassocia a sessão, zera o ledger; eventos de outro `userId` são descartados.
+- [x] Preço muda durante a revisão → nova cotação, "Valores atualizados" e nova confirmação; servidor ainda valida (`QUOTE_OUTDATED`).
+- [x] `socket.io-client` carregado sob demanda (fora do bundle inicial).
 
 ### Fase 4: Polimento visual e acessibilidade
 
@@ -172,8 +174,8 @@ Convenções:
 6. [x] Compra completa até o recibo.
 7. [x] Pagamento recusado, clique repetido e timeout com recuperação do mesmo pedido.
 8. [x] Perfil, avatar, senha e carteiras com erros de validação.
-9. [ ] Preço/disponibilidade alterados via Socket.IO durante o checkout. _(revalidação REST já coberta; falta o evento)_
-10. [ ] Eventos duplicados ou antigos, desconexão e retomada de pedido pendente. _(retomada após refresh já coberta)_
+9. [x] Preço/disponibilidade alterados via Socket.IO no detalhe, no carrinho e durante o checkout.
+10. [x] Eventos duplicados ou antigos, eventos de outro usuário, desconexão com fallback e reconciliação.
 11. [ ] Teclado, foco de dialogs e validação de formulários. _(dialog de login e formulários de conta cobertos)_
 12. [x] Skeletons em rede lenta, erro e nova tentativa (catálogo; repetir nas próximas telas).
 

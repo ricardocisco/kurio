@@ -2,6 +2,8 @@ import type { NftDetail } from '@/shared/contracts/nft';
 import { isEthAmount } from '@/shared/lib/money';
 
 import { updateDatabase } from '../db/database';
+import { createNftUpdatedEvent } from '../realtime/events';
+import { publishRealtimeEvent } from '../realtime/socket-server';
 
 interface EditionChange {
   nftId: string;
@@ -21,7 +23,7 @@ export function updateEdition(change: EditionChange): NftDetail {
     throw new Error(`Invalid availability "${String(change.available)}"`);
   }
 
-  return updateDatabase((draft) => {
+  const updated = updateDatabase((draft) => {
     const nft = draft.nfts.find((item) => item.id === change.nftId);
     const edition = nft?.editions.find((item) => item.id === change.editionId);
     if (!nft || !edition) throw new Error(`Unknown edition ${change.nftId}/${change.editionId}`);
@@ -33,4 +35,6 @@ export function updateEdition(change: EditionChange): NftDetail {
     nft.version += 1;
     return structuredClone(nft);
   });
+  publishRealtimeEvent(createNftUpdatedEvent(updated));
+  return updated;
 }

@@ -24,6 +24,7 @@ import {
   ORDER_PROCESSING_MS,
   pricingFingerprint,
   resolveOrderIfDue,
+  scheduleOrderResolution,
 } from '../utils/checkout-engine';
 import { errorResponse, jsonResponse } from '../utils/responses';
 
@@ -226,6 +227,8 @@ export const checkoutHandlers = [
       draft.idempotencyKeys[idempotencyId] = { orderId: order.id, requestHash };
       delete draft.quotes[quoteRecord.quote.id];
     });
+
+    scheduleOrderResolution(order.id);
 
     if (getScenarioFlags().orderTimeout && consumeOnce('order-timeout')) {
       await delay(ORDER_TIMEOUT_DELAY_MS);
