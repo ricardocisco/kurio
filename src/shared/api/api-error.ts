@@ -2,7 +2,6 @@ import { isAxiosError } from 'axios';
 
 import { apiErrorBodySchema, type ApiErrorCode } from '@/shared/contracts/errors';
 
-/** Transport-level failure category, independent from the business error code. */
 export type ApiErrorKind = 'http' | 'network' | 'timeout' | 'contract';
 
 interface ApiErrorInit {
@@ -15,10 +14,6 @@ interface ApiErrorInit {
   cause?: unknown;
 }
 
-/**
- * Single error type surfaced to the application. Every Axios/validation failure is normalized
- * into an `ApiError`, so hooks and components can branch on `code` with full type safety.
- */
 export class ApiError extends Error {
   readonly code: ApiErrorCode;
   readonly kind: ApiErrorKind;
@@ -36,7 +31,6 @@ export class ApiError extends Error {
     this.details = init.details ?? {};
   }
 
-  /** Transient failures may be retried safely (only for idempotent requests). */
   get isRetryable(): boolean {
     if (this.kind === 'network' || this.kind === 'timeout') return true;
     return this.status !== undefined && this.status >= 500;
@@ -67,7 +61,6 @@ function codeFromStatus(status: number): ApiErrorCode {
   return 'INTERNAL_ERROR';
 }
 
-/** Converts any thrown value from the HTTP layer into an `ApiError`. */
 export function normalizeApiError(error: unknown): ApiError {
   if (isApiError(error)) return error;
 

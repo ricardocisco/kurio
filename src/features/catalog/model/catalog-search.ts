@@ -10,12 +10,6 @@ import {
   type CatalogQuery,
 } from '@/shared/contracts/nft';
 
-/**
- * Catalog state lives in the URL (search, tab, filters, sort, page) so it survives refresh and is
- * restored by browser history. Invalid values fall back to defaults instead of breaking the page.
- */
-
-/** TanStack Router parses JSON-looking values ("1.5" -> 1.5), so scalars are normalized to strings. */
 const toOptionalString = (value: unknown): string | undefined => {
   if (typeof value === 'number') return String(value);
   return typeof value === 'string' && value !== '' ? value : undefined;
@@ -34,7 +28,6 @@ export const catalogSearchSchema = z.object({
 
 export type CatalogSearch = z.output<typeof catalogSearchSchema>;
 
-/** Default values are stripped from the URL to keep links short and canonical. */
 export const CATALOG_SEARCH_DEFAULTS = {
   tab: 'all',
   categories: [],
@@ -45,10 +38,6 @@ export const CATALOG_SEARCH_DEFAULTS = {
 
 export type CatalogSearchPatch = Partial<CatalogSearch>;
 
-/**
- * Applies a partial change to the catalog state. Any change other than the page itself resets
- * pagination to the first page, as required for filters, search, tab and sort changes.
- */
 export function applyCatalogSearchPatch(
   current: CatalogSearch,
   patch: CatalogSearchPatch,
@@ -57,7 +46,6 @@ export function applyCatalogSearchPatch(
   return { ...current, ...patch, page: changesOnlyPage ? (patch.page ?? current.page) : 1 };
 }
 
-/** Maps URL state to the API query contract. */
 export function toCatalogQuery(search: CatalogSearch): CatalogQuery {
   return {
     search: search.q,

@@ -6,7 +6,6 @@ import { isApiError } from '@/shared/api/api-error';
 
 import { RetryButton, StatusMessage } from './StatusMessage';
 
-/** Default route error boundary: resets failed queries and re-runs the route on retry. */
 export function RouteErrorFallback({ error }: ErrorComponentProps) {
   const router = useRouter();
   const queryErrorResetBoundary = useQueryErrorResetBoundary();

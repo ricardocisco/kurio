@@ -11,12 +11,6 @@ import {
   type LatencyStrategy,
 } from './scenarios';
 
-/**
- * Network condition simulator. Runs before every API handler: applies the scenario latency and,
- * when a fault rule matches, short-circuits with a network error, an endless request (timeout)
- * or an HTTP error. Everything is deterministic for a given scenario and request sequence.
- */
-
 const requestCounters = new Map<string, number>();
 const faultHits = new Map<FaultRule, number>();
 let random = createSeededRandom(hashString(getActiveScenarioName()));
@@ -66,10 +60,6 @@ function findFault(method: string, pathname: string): FaultRule | undefined {
   });
 }
 
-/**
- * Returns a Response when the request must fail, or `undefined` to let the real handler run.
- * `apiPathname` is the request path relative to the API base URL (e.g. "/nfts").
- */
 export async function simulateNetwork(
   method: string,
   apiPathname: string,

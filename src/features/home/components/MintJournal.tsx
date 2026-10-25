@@ -11,7 +11,6 @@ const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
   timeZone: 'UTC',
 });
 
-/** "Diário da Cunhagem" editorial section (articles are out of scope: no fake navigation). */
 export function MintJournal() {
   const showComingSoon = useComingSoon();
 

@@ -1,7 +1,3 @@
-/**
- * Mulberry32: tiny seeded PRNG. Fixtures and simulated latency must be reproducible,
- * so `Math.random` is never used inside the mock layer.
- */
 export function createSeededRandom(seed: number): () => number {
   let state = seed >>> 0;
   return () => {

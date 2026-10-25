@@ -7,7 +7,7 @@ React + TypeScript com TanStack Router/Query, Axios, Socket.IO, Tailwind CSS, sh
 - Arquitetura, contratos e decisões: [`ARCHITECTURE.md`](ARCHITECTURE.md)
 - Cenários e controle dos mocks: [`docs/MOCKS.md`](docs/MOCKS.md)
 
-> Status: **fundação, catálogo e detalhe do NFT funcionando** (35 testes E2E). As demais telas já existem nas rotas e informam que estão em desenvolvimento. Demo: https://kurio-six.vercel.app
+> Status: **fundação, catálogo, detalhe do NFT e autenticação funcionando** (50 testes E2E). As demais telas já existem nas rotas e informam que estão em desenvolvimento. Demo: https://kurio-six.vercel.app
 
 ## Requisitos
 
@@ -66,6 +66,7 @@ Selecione pela URL (vale para a aba inteira): `http://localhost:5173/?scenario=s
 | `offline`          | Toda requisição falha na rede                             |
 | `server-error`     | Listagem responde 503 duas vezes e depois se recupera     |
 | `catalog-down`     | Listagem sempre responde 500                              |
+| `session-expired`  | Expira a sessão ativa ao abrir a página                   |
 | `empty-catalog`    | Catálogo vazio                                            |
 
 Pelo console do navegador:
@@ -74,6 +75,7 @@ Pelo console do navegador:
 __kurioMocks.scenarios; // lista com descrições
 __kurioMocks.setScenario('slow'); // troca o cenário sem recarregar
 __kurioMocks.reset(); // restaura todas as fixtures (recarregue a página em seguida)
+__kurioMocks.expireSessions(); // expira todas as sessões no servidor simulado
 ```
 
 ## Reproduzindo fluxos de falha (catálogo)
@@ -86,7 +88,20 @@ __kurioMocks.reset(); // restaura todas as fixtures (recarregue a página em seg
 
 ## Credenciais fictícias
 
-Serão adicionadas junto com a autenticação (fase 2.3).
+| Usuário   | E-mail                   | Senha       |
+| --------- | ------------------------ | ----------- |
+| Nova Sato | `colecionador@kurio.dev` | `Kurio@123` |
+| Rafa Lima | `artista@kurio.dev`      | `Kurio@456` |
+
+Também é possível criar contas novas em `/register`. As senhas ficam no mock apenas como hash SHA-256 com salt.
+
+## Reproduzindo fluxos de sessão
+
+1. **Conflito de cadastro:** cadastre com `colecionador@kurio.dev` (409 no campo e-mail) ou com o usuário `admin` (422, nome reservado).
+2. **Credenciais inválidas:** entre com uma senha errada.
+3. **Retorno ao fluxo:** acesse `/account/profile` deslogado, faça login e volte para a mesma página.
+4. **Expiração:** logado, rode `__kurioMocks.expireSessions()` no console e navegue para uma página privada (ou abra `?scenario=session-expired`).
+5. **Troca de usuário:** saia pelo menu da conta e entre com o outro usuário.
 
 ## Deploy
 

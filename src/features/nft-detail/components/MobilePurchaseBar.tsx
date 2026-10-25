@@ -14,7 +14,6 @@ interface MobilePurchaseBarProps {
   noteId: string;
 }
 
-/** Fixed bottom bar from the "Mobile / Detalhes do NFT" frame. Shows the total for the quantity. */
 export function MobilePurchaseBar({
   nft,
   edition,

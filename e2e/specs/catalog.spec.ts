@@ -2,11 +2,6 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 
 import { catalogCardNames, catalogCards, openApp } from '../support/app';
 
-/**
- * Scenario 1 of the challenge: search, combined filters, sorting, pagination and restoration
- * through browser history. Assertions observe the UI and the URL, never internal state.
- */
-
 const FIRST_PAGE_FIGMA_ORDER = [
   'Emerald Ape #042',
   'Sage Nomad #009',
@@ -19,7 +14,6 @@ const FIRST_PAGE_FIGMA_ORDER = [
   'Golden Signal #160',
 ];
 
-/** Filter controls live in the sidebar on desktop and inside a drawer on mobile. */
 async function filtersPanel(page: Page, isMobile: boolean): Promise<Locator> {
   if (!isMobile) return page.getByRole('complementary', { name: 'Filtros do catálogo' });
   await page.getByRole('button', { name: /^(Abrir filtros|Filtros \()/ }).click();
@@ -34,7 +28,6 @@ function resultsAnnouncement(page: Page) {
   return page.getByRole('status').filter({ hasText: /encontrad/ });
 }
 
-/** Reads "(12)" from a facet toggle button. */
 async function facetCount(option: Locator): Promise<number> {
   const text = (await option.textContent()) ?? '';
   return Number(/\((\d+)\)/.exec(text)?.[1]);
@@ -63,7 +56,7 @@ test.describe('Catalog', () => {
     await music.click();
 
     await expect(page).toHaveURL(/categories=/);
-    await expect(page).not.toHaveURL(/page=/); // filter change resets pagination
+    await expect(page).not.toHaveURL(/page=/);
     await expect(music).toHaveAttribute('aria-pressed', 'true');
     await closeFilters(page, isMobile);
     await expect(resultsAnnouncement(page)).toHaveText(
@@ -80,7 +73,6 @@ test.describe('Catalog', () => {
     await expect(resultsAnnouncement(page)).toContainText(String(expectedCombinedCount));
     await expect(page.getByRole('group', { name: 'Filtros ativos' })).toContainText('Polygon');
 
-    // Refresh keeps every filter.
     await page.reload();
     await expect(page.getByRole('group', { name: 'Filtros ativos' })).toContainText('Música');
     await expect(page.getByRole('group', { name: 'Filtros ativos' })).toContainText('Polygon');
@@ -152,7 +144,6 @@ test.describe('Catalog', () => {
     isMobile,
   }) => {
     test.skip(isMobile, 'Covered on desktop; the drawer adds no extra behavior here.');
-    // In this scenario odd listing requests take 1.5 s and even ones 150 ms.
     await openApp(page, '/', 'out-of-order');
     await expect(catalogCards(page)).toHaveCount(9);
 
@@ -161,14 +152,13 @@ test.describe('Catalog', () => {
     const gaming = panel.getByRole('button', { name: /^Jogos/ });
     const gamingCount = await facetCount(gaming);
 
-    await music.click(); // fast
+    await music.click();
     await expect(music).toHaveAttribute('aria-pressed', 'true');
-    await gaming.click(); // slow: music + gaming
-    await music.click(); // fast: gaming only, resolves before the previous request
+    await gaming.click();
+    await music.click();
 
     await expect(page).toHaveURL(/categories=%5B%22gaming%22%5D/);
     await expect(resultsAnnouncement(page)).toHaveText(new RegExp(`^${gamingCount} NFT`));
-    // Wait past the slow response: the stale result must not overwrite the latest one.
     await page.waitForTimeout(1_800);
     await expect(resultsAnnouncement(page)).toHaveText(new RegExp(`^${gamingCount} NFT`));
     await expect(page.getByRole('group', { name: 'Filtros ativos' })).not.toContainText('Música');
@@ -184,7 +174,6 @@ test.describe('Catalog loading and failures', () => {
   });
 
   test('recovers from a transient server error with automatic retries', async ({ page }) => {
-    // The listing fails twice with 503; TanStack Query retries transient errors twice.
     await openApp(page, '/', 'server-error');
     await expect(catalogCards(page)).toHaveCount(9, { timeout: 10_000 });
   });

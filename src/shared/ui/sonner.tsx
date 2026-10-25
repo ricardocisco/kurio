@@ -1,6 +1,5 @@
 import { Toaster as SonnerToaster, type ToasterProps } from 'sonner';
 
-/** App-wide toast region. Sonner renders an `aria-live` region, so toasts are announced. */
 export function Toaster(props: ToasterProps) {
   return (
     <SonnerToaster

@@ -21,7 +21,6 @@ interface CatalogResultsProps {
 const gridClass =
   'grid grid-cols-2 items-start gap-x-4 gap-y-6 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:gap-x-6 [&>*:nth-child(even)]:mt-8 md:[&>*:nth-child(even)]:mt-0';
 
-/** Renders every state of the catalog grid: loading, error, empty, data and background update. */
 export function CatalogResults({
   data,
   error,

@@ -19,13 +19,11 @@ interface NftDetailPageProps {
 }
 
 export function NftDetailPage({ nftId, selectedEditionId, onEditionChange }: NftDetailPageProps) {
-  // The route loader guarantees the data; the subscription keeps it in sync with later updates.
   const { data: nft } = useSuspenseQuery(nftDetailQueryOptions(nftId));
   const noteId = useId();
   const [requestedQuantity, setRequestedQuantity] = useState(1);
 
   const edition = resolveSelectedEdition(nft, selectedEditionId);
-  // Re-clamped on every render: if availability drops (e.g. realtime update), the quantity follows.
   const quantity = Math.max(1, clampQuantity(requestedQuantity, getQuantityLimit(edition)));
 
   const handleEditionChange = (editionId: string) => {

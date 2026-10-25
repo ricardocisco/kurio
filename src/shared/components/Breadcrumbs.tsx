@@ -4,7 +4,6 @@ import { cn } from '@/shared/lib/cn';
 
 export interface BreadcrumbItem {
   label: string;
-  /** Omit on the current page (last item). */
   link?: Pick<LinkProps, 'to' | 'params' | 'search'>;
 }
 

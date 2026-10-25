@@ -1,6 +1,5 @@
 import { Skeleton } from '@/shared/ui/skeleton';
 
-/** Route pending state: mirrors the final layout so nothing shifts when data arrives. */
 export function NftDetailSkeleton() {
   return (
     <div className="container-content flex flex-col gap-8 py-4 md:py-6" aria-busy="true">

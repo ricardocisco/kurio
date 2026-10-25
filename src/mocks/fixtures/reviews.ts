@@ -4,11 +4,6 @@ import { createSeededRandom } from '../utils/random';
 
 import { MOCK_REFERENCE_DATE } from './nfts';
 
-/**
- * Reviews are derived deterministically from the NFT id and its rating summary, so the review list
- * always matches `rating.count` and `rating.average` without storing hundreds of records.
- */
-
 const AUTHORS = [
   'Ana Ribeiro',
   'Bruno Tanaka',

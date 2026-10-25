@@ -5,7 +5,6 @@ import { cn } from '@/shared/lib/cn';
 interface RatingStarsProps {
   average: number;
   count?: number;
-  /** "full": 5 stars + count text (desktop); "compact": pill "★ 4.8 (19)" (mobile). */
   variant?: 'full' | 'compact' | 'stars';
   className?: string;
 }

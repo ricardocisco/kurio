@@ -1,11 +1,6 @@
-/**
- * Primary navigation from the Figma header. Items without `to` are out of the challenge scope:
- * they render as buttons that explain the area is not available instead of fake pages.
- */
 export interface NavigationItem {
   label: string;
   to?: '/' | '/marketplace';
-  /** Pathname prefixes that mark this item as active. */
   activeOn?: string[];
 }
 

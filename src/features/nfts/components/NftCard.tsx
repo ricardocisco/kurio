@@ -9,7 +9,6 @@ import { NftImage } from './NftImage';
 
 interface NftCardProps {
   nft: NftSummary;
-  /** `sizes` for the artwork; defaults to the 3-column desktop / 2-column mobile grid. */
   imageSizes?: string;
   priority?: boolean;
   className?: string;
@@ -40,7 +39,6 @@ export function NftCard({ nft, imageSizes = DEFAULT_SIZES, priority, className }
       </div>
       <div className="flex flex-col gap-0.5 px-1">
         <h3 className="text-sm text-text-secondary">
-          {/* The stretched link makes the whole card clickable with a single tab stop. */}
           <Link
             to="/nfts/$nftId"
             params={{ nftId: nft.id }}

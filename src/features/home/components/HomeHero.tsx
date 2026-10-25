@@ -26,7 +26,6 @@ function SlideDots({ slides, activeIndex, onSelect, className }: SlideDotsProps)
           onClick={() => onSelect(index)}
           aria-label={`Mostrar destaque ${index + 1}: ${slide.name}`}
           aria-pressed={index === activeIndex}
-          // 24px hit area (WCAG 2.5.8) around the 10px dot from the design.
           className="group flex size-6 items-center justify-center rounded-full"
         >
           <span
@@ -49,7 +48,6 @@ function useHeroSlides() {
   return { slides, activeIndex, setActiveIndex, activeSlide: slides[activeIndex] ?? slides[0] };
 }
 
-/** Desktop/tablet hero (frame "Desktop / Início"). */
 export function DesktopHomeHero() {
   const { slides, activeIndex, setActiveIndex, activeSlide } = useHeroSlides();
 
@@ -95,7 +93,6 @@ export function DesktopHomeHero() {
   );
 }
 
-/** Mobile hero card (frame "Mobile / Início"), rendered below the mobile search bar. */
 export function MobileHomeHero() {
   const { slides, activeIndex, setActiveIndex, activeSlide } = useHeroSlides();
 

@@ -5,13 +5,10 @@ import { cn } from '@/shared/lib/cn';
 
 interface NftImageProps extends Omit<React.ComponentProps<'img'>, 'src' | 'srcSet' | 'alt'> {
   image: NftImageData;
-  /** `sizes` attribute describing the rendered width at each breakpoint. */
   sizes: string;
-  /** Marks the image as the LCP candidate: eager load with high fetch priority. */
   priority?: boolean;
 }
 
-/** Responsive NFT artwork with intrinsic size to prevent layout shift. */
 export function NftImage({ image, sizes, priority = false, className, ...props }: NftImageProps) {
   return (
     <img

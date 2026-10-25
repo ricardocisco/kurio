@@ -8,9 +8,15 @@ import { AppHeader } from './AppHeader';
 import { MobileTabBar } from './MobileTabBar';
 
 export function SiteLayout({ children }: { children: React.ReactNode }) {
-  const hasPageBar = useMatches({
-    select: (matches) => matches.some((match) => match.staticData.mobileNavigation === 'page-bar'),
+  const { mobileNavigation, hideFooterOnMobile } = useMatches({
+    select: (matches) => ({
+      mobileNavigation:
+        matches.findLast((match) => match.staticData.mobileNavigation)?.staticData
+          .mobileNavigation ?? 'tab-bar',
+      hideFooterOnMobile: matches.some((match) => match.staticData.hideFooterOnMobile),
+    }),
   });
+  const hasPageBar = mobileNavigation === 'page-bar';
 
   return (
     <div className={cn('flex min-h-dvh flex-col overflow-x-clip', hasPageBar && 'max-md:pb-40')}>
@@ -21,7 +27,6 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
         Pular para o conteúdo
       </a>
       <AppHeader />
-      {/* At least one viewport tall: the footer never starts visible and then gets pushed (CLS). */}
       <main
         id="main-content"
         tabIndex={-1}
@@ -29,8 +34,10 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
       >
         {children}
       </main>
-      <AppFooter />
-      {!hasPageBar && <MobileTabBar />}
+      <div className={cn(hideFooterOnMobile && 'max-md:hidden')}>
+        <AppFooter />
+      </div>
+      {mobileNavigation === 'tab-bar' && <MobileTabBar />}
     </div>
   );
 }

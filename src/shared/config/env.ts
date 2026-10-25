@@ -12,10 +12,6 @@ const envSchema = z.object({
   VITE_MOCK_SCENARIO: z.string().min(1).default('default'),
 });
 
-/**
- * Validated, typed runtime configuration.
- * Fails fast at startup instead of producing confusing runtime errors later.
- */
 export const env = envSchema.parse(import.meta.env);
 
 export type AppEnv = z.infer<typeof envSchema>;

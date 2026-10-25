@@ -6,14 +6,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Design tokens sampled from the Figma "Frontend Challenge" prototype (Kurio).
- * Every color in the UI must come from these tokens; never hardcode hex values in components.
- */
 :root {
   --radius: 0.375rem;
 
-  /* Brand palette */
   --kurio-950: #150c0a;
   --kurio-900: #1c1210;
   --kurio-850: #241613;
@@ -27,7 +22,6 @@
   --kurio-sand: #e8e0d8;
   --kurio-tan: #bfa58c;
 
-  /* Semantic tokens (shadcn/ui contract) */
   --background: var(--kurio-950);
   --foreground: var(--kurio-cream);
   --card: var(--kurio-850);
@@ -90,10 +84,9 @@
   --radius-xl: calc(var(--radius) + 10px);
   --radius-2xl: calc(var(--radius) + 18px);
 
-  --container-content: 75rem; /* 1200px content width from the desktop frames */
-  --spacing-header: 4.25rem; /* 68px */
-  --spacing-sidebar: 19.375rem; /* 310px */
-
+  --container-content: 75rem;
+  --spacing-header: 4.25rem;
+  --spacing-sidebar: 19.375rem;
   --animate-shimmer: shimmer 1.6s ease-in-out infinite;
 
   @keyframes shimmer {

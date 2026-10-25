@@ -7,7 +7,6 @@ interface NftShareLinksProps {
   url: string;
 }
 
-/** Real share intents (no fake success): each opens the network's own share flow. */
 export function NftShareLinks({ nftName, url }: NftShareLinksProps) {
   const text = `Confira ${nftName} na Kurio`;
   const links = [

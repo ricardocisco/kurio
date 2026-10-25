@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
 
-/** Returns a stable debounced version of `callback`; pending calls are cancelled on unmount. */
 export function useDebouncedCallback<TArgs extends unknown[]>(
   callback: (...args: TArgs) => void,
   delayMs: number,

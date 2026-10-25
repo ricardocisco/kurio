@@ -3,10 +3,8 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { cn } from '@/shared/lib/cn';
 
 interface ScrollCarouselProps {
-  /** Accessible name of the carousel region. */
   label: string;
   items: ReactNode[];
-  /** Width of each slide, e.g. "basis-[45%] md:basis-[calc((100%-4rem)/5)]". */
   itemClassName: string;
   className?: string;
 }
@@ -15,10 +13,6 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-/**
- * Lightweight carousel built on native horizontal scrolling with scroll-snap: works with touch,
- * trackpad and keyboard (focus moves the scroll), with page dots as in the Figma frames.
- */
 export function ScrollCarousel({ label, items, itemClassName, className }: ScrollCarouselProps) {
   const listRef = useRef<HTMLUListElement>(null);
   const [pageCount, setPageCount] = useState(1);

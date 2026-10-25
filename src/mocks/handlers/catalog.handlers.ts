@@ -39,7 +39,6 @@ function listedNfts(): readonly NftDetail[] {
 
 type FacetKey = 'categories' | 'networks';
 
-/** Applies every filter except the ones listed in `ignore` (used to compute facet counts). */
 function applyFilters(
   nfts: readonly NftDetail[],
   query: CatalogQuery,
@@ -174,7 +173,6 @@ export const catalogHandlers = [
     const nft = nfts.find((item) => item.id === params.nftId);
     if (!nft) return errorResponse('NOT_FOUND', 'NFT não encontrado.');
 
-    // Same collection first, then the most recent listings, up to 10 items.
     const others = nfts.filter((item) => item.id !== nft.id);
     const sameCollection = others.filter((item) => item.collection.id === nft.collection.id);
     const fallback = sortNfts(

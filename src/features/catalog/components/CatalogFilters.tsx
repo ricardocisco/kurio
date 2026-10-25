@@ -16,7 +16,6 @@ function toggle<TId>(list: readonly TId[], id: TId): TId[] {
   return list.includes(id) ? list.filter((item) => item !== id) : [...list, id];
 }
 
-/** Filter panel shared by the desktop sidebar and the mobile drawer. */
 export function CatalogFilters({ facets, search, onSearchChange }: CatalogFiltersProps) {
   if (!facets) return <CatalogFiltersSkeleton />;
 
@@ -30,7 +29,6 @@ export function CatalogFilters({ facets, search, onSearchChange }: CatalogFilter
         emphasizeCounts
       />
       <PriceRangeFilter
-        // Remount when the applied range changes externally (history navigation, clear filters).
         key={`${search.minPrice ?? ''}-${search.maxPrice ?? ''}`}
         range={facets.priceRange}
         minPrice={search.minPrice}

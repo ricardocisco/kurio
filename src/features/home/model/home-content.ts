@@ -1,10 +1,5 @@
 import type { NftImage } from '@/shared/contracts/nft';
 
-/**
- * Static editorial content from the Figma home frame. Editorial pages are out of the challenge
- * scope, so this copy is not fetched from the API and its "read more" actions are not navigable.
- */
-
 const image = (artwork: string, alt: string): NftImage => ({
   alt,
   small: `/images/nfts/${artwork}-400.webp`,

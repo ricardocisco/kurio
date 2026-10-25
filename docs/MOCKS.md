@@ -23,6 +23,7 @@ O backend da Kurio é simulado no navegador com [MSW](https://mswjs.io). O app f
 
 - `fixtures/nfts.ts` gera 48 NFTs a partir de uma seed fixa (PRNG Mulberry32), com 9 categorias, 3 redes, raridades, edições (1/1, 1/10, 1/50, aberta) e preços de 0.02 a 12.30 ETH.
 - A primeira página ordenada por "recentes" reproduz exatamente os 9 cards do frame do Figma.
+- `fixtures/users.ts` traz 2 usuários com senha guardada como hash SHA-256 + salt (nunca em claro).
 - As datas usam um relógio fixo (`MOCK_REFERENCE_DATE`), então "Novos lançamentos" nunca muda entre execuções.
 
 ## Cenários
@@ -44,6 +45,7 @@ Seleção: `?scenario=<nome>` na URL (fica salvo no `sessionStorage` da aba), `V
 | `scenarios`                           | Mapa nome → descrição                  |
 | `getScenario()` / `setScenario(nome)` | Consulta/troca de cenário              |
 | `reset()`                             | Restaura fixtures e contadores de rede |
+| `expireSessions()`                    | Expira todas as sessões ativas         |
 
 Esse controle altera apenas o "servidor". O app sempre observa a mudança por REST (ou, na fase 3, por eventos Socket.IO), nunca por escrita direta no cache.
 

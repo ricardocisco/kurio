@@ -4,10 +4,6 @@ export function isEditionAvailable(edition: NftEdition): boolean {
   return edition.available > 0;
 }
 
-/**
- * Picks the edition to display: the requested one (even if sold out, so the user sees why it is
- * unavailable), otherwise the default edition if available, otherwise the first available one.
- */
 export function resolveSelectedEdition(
   nft: NftDetail,
   requestedId: string | undefined,
@@ -23,7 +19,6 @@ export function resolveSelectedEdition(
 
 export interface QuantityLimit {
   max: number;
-  /** What caps the quantity: remaining stock or the per-order rule. */
   reason: 'stock' | 'per-order';
 }
 

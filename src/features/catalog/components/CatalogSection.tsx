@@ -22,18 +22,11 @@ export type CatalogSearchChangeHandler = (
 interface CatalogSectionProps {
   search: CatalogSearch;
   onSearchChange: CatalogSearchChangeHandler;
-  /** Accessible title of the section (visually hidden, the Figma has no visible heading). */
   title: string;
-  /** Extra content under the desktop filters (e.g. the "NFT em destaque" card on the home). */
   sidebarAddon?: ReactNode;
-  /** Content rendered above the toolbar on mobile only (e.g. the home hero card). */
   mobileHeader?: ReactNode;
 }
 
-/**
- * Catalog block reused by the home and the marketplace pages. It is fully controlled by URL
- * state: the parent route owns `search` and applies changes through `onSearchChange`.
- */
 export function CatalogSection({
   search,
   onSearchChange,
@@ -73,7 +66,6 @@ export function CatalogSection({
         {mobileHeader}
       </div>
 
-      {/* After the mobile hero (which holds the page h1), so the heading order stays h1 > h2 > h3. */}
       <h2 id="catalog-title" className="sr-only">
         {title}
       </h2>

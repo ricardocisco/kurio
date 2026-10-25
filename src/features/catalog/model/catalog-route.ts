@@ -4,10 +4,6 @@ import { catalogPageQueryOptions, featuredNftsQueryOptions } from '@/features/nf
 
 import { toCatalogQuery, type CatalogSearch } from './catalog-search';
 
-/**
- * Starts catalog requests as soon as navigation (or hover preload) begins, without blocking the
- * route: the page renders immediately and shows skeletons until TanStack Query resolves.
- */
 export function prefetchCatalog(
   queryClient: QueryClient,
   search: CatalogSearch,

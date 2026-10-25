@@ -39,7 +39,6 @@ export function NftDetailTabs({ nft }: { nft: NftDetail }) {
         </dl>
       </TabsContent>
 
-      {/* Radix only mounts the active panel, so reviews are fetched when the tab is opened. */}
       <TabsContent value="reviews">
         <NftReviews nftId={nft.id} />
       </TabsContent>

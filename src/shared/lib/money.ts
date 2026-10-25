@@ -1,12 +1,7 @@
 import Decimal from 'decimal.js';
 
-/**
- * ETH amounts travel as decimal strings (e.g. "1.19") to avoid floating point errors.
- * All arithmetic must go through these helpers; never convert an amount to `number`.
- */
 export type EthAmount = string;
 
-/** Wei precision: ETH has 18 decimal places. */
 export const ETH_DECIMALS = 18;
 
 const EthDecimal = Decimal.clone({ precision: 64, rounding: Decimal.ROUND_HALF_UP });
@@ -40,7 +35,6 @@ export function multiplyEth(value: EthAmount, factor: number | string): EthAmoun
   return toAmount(toDecimal(value).times(new EthDecimal(factor)));
 }
 
-/** Applies a percentage (0-100) and returns the discounted portion. */
 export function percentageOfEth(value: EthAmount, percentage: number): EthAmount {
   return toAmount(toDecimal(value).times(percentage).dividedBy(100));
 }
@@ -58,17 +52,11 @@ export function isZeroEth(value: EthAmount): boolean {
 }
 
 interface FormatEthOptions {
-  /** Minimum fraction digits shown (Figma shows at least 2, e.g. "1.19 ETH"). */
   minimumFractionDigits?: number;
-  /** Maximum fraction digits shown; amounts are never rounded below this precision. */
   maximumFractionDigits?: number;
   withSymbol?: boolean;
 }
 
-/**
- * Formats an ETH amount for display while preserving precision.
- * "26.846" -> "26.846 ETH", "1.1" -> "1.10 ETH", "0.016" -> "0.016 ETH".
- */
 export function formatEth(value: EthAmount, options: FormatEthOptions = {}): string {
   const { minimumFractionDigits = 2, maximumFractionDigits = 6, withSymbol = true } = options;
   const decimal = toDecimal(value).toDecimalPlaces(maximumFractionDigits, Decimal.ROUND_HALF_UP);

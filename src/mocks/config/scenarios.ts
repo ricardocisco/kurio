@@ -1,15 +1,8 @@
 import { env } from '@/shared/config/env';
 
-/**
- * Mock scenarios. A scenario combines network conditions (latency/faults) with business flags
- * read by the handlers. Scenarios are selected with `?scenario=<name>` (kept per tab in
- * sessionStorage), with `VITE_MOCK_SCENARIO` as the default, or via `window.__kurioMocks`.
- */
-
 interface LatencyContext {
   method: string;
   pathname: string;
-  /** Sequential index of matching requests since the scenario was activated. */
   requestIndex: number;
   random: () => number;
 }
@@ -24,10 +17,8 @@ export type FaultEffect =
 
 export interface FaultRule {
   method?: string;
-  /** Matched against the request pathname (without the API base). */
   path: RegExp;
   effect: FaultEffect;
-  /** Apply only to the first N matching requests (then recover). Omit to always apply. */
   times?: number;
 }
 
@@ -95,6 +86,11 @@ export const SCENARIOS = {
       },
     ],
   },
+  'session-expired': {
+    description:
+      'Expira a sessão ativa ao abrir a página (a próxima chamada autenticada recebe 401).',
+    latency: DEFAULT_LATENCY,
+  },
   'empty-catalog': {
     description: 'Catálogo sem nenhum NFT listado.',
     latency: DEFAULT_LATENCY,
@@ -126,10 +122,6 @@ function readSessionScenario(): ScenarioName | null {
 let activeScenario: ScenarioName = readSessionScenario() ?? defaultScenario();
 const scenarioListeners = new Set<(name: ScenarioName) => void>();
 
-/**
- * Applies `?scenario=` from the URL the page was opened with. The bootstrap captures that URL
- * before the first render, because the router may normalize the search params afterwards.
- */
 export function initializeScenarioFromUrl(initialSearch: string): void {
   const fromUrl = new URLSearchParams(initialSearch).get('scenario');
   if (isScenarioName(fromUrl)) setActiveScenario(fromUrl);
@@ -150,12 +142,16 @@ export function getScenarioFlags(): ScenarioFlags {
 
 export function setActiveScenario(name: ScenarioName): void {
   activeScenario = name;
+  persistScenario(name);
+  scenarioListeners.forEach((listener) => listener(name));
+}
+
+function persistScenario(name: ScenarioName): void {
   try {
     window.sessionStorage.setItem(SCENARIO_STORAGE_KEY, name);
   } catch {
-    // Ignored: the scenario still applies for the current page lifetime.
+    return;
   }
-  scenarioListeners.forEach((listener) => listener(name));
 }
 
 export function onScenarioChange(listener: (name: ScenarioName) => void): () => void {

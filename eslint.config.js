@@ -45,7 +45,6 @@ export default defineConfig([
       ],
       '@typescript-eslint/only-throw-error': [
         'error',
-        // TanStack Router uses `throw redirect()` / `throw notFound()`.
         {
           allow: [
             {
@@ -61,8 +60,6 @@ export default defineConfig([
     },
   },
   {
-    // Architectural boundary: application code must never import the mock layer.
-    // Mocks are wired exclusively at the network level (see src/app/bootstrap.ts).
     files: ['src/**/*.{ts,tsx}'],
     ignores: ['src/mocks/**', 'src/app/bootstrap.ts'],
     rules: {
@@ -81,7 +78,6 @@ export default defineConfig([
     },
   },
   {
-    // shadcn/ui primitives and route files export non-components by design.
     files: ['src/shared/ui/**/*.tsx', 'src/routes/**/*.tsx'],
     rules: { 'react-refresh/only-export-components': 'off' },
   },

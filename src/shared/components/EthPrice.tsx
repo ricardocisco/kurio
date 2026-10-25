@@ -7,7 +7,6 @@ interface EthPriceProps {
   className?: string;
 }
 
-/** Price in ETH with an optional struck-through previous price (announced to screen readers). */
 export function EthPrice({ value, previousValue, className }: EthPriceProps) {
   return (
     <p className={cn('flex flex-wrap items-baseline gap-x-2 font-bold text-primary', className)}>

@@ -13,11 +13,9 @@ interface FilterOptionListProps<TId extends string> {
   options: FilterOption<TId>[];
   selected: readonly TId[];
   onToggle: (id: TId) => void;
-  /** Counts are bold in "Coleções" and regular in "Rede" in the Figma frame. */
   emphasizeCounts?: boolean;
 }
 
-/** Multi-select filter list. Each option is a toggle button (`aria-pressed`), plus a check icon. */
 export function FilterOptionList<TId extends string>({
   title,
   options,

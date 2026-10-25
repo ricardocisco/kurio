@@ -32,7 +32,6 @@ export const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ComponentProps<'button'>, VariantProps<typeof buttonVariants> {
-  /** Renders the child element (e.g. a router `Link`) with button styles. */
   asChild?: boolean;
 }
 

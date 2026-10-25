@@ -5,7 +5,6 @@ import { routeTree } from '@/routeTree.gen';
 import { RouteErrorFallback } from '@/shared/components/RouteErrorFallback';
 import { NotFoundPage } from '@/shared/components/NotFoundPage';
 
-/** Dependencies available to every route `beforeLoad` / `loader` via `context`. */
 export interface RouterContext {
   queryClient: QueryClient;
 }
@@ -14,7 +13,6 @@ export function createAppRouter(queryClient: QueryClient) {
   return createRouter({
     routeTree,
     context: { queryClient },
-    // Data freshness is owned by TanStack Query, so the router never caches loader results.
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
     scrollRestoration: true,
@@ -29,10 +27,7 @@ declare module '@tanstack/react-router' {
   }
 
   interface StaticDataRouteOption {
-    /**
-     * Mobile bottom navigation: the default tab bar, or a page-specific fixed bar
-     * (e.g. the purchase bar on the NFT detail), in which case the tab bar is hidden.
-     */
-    mobileNavigation?: 'tab-bar' | 'page-bar';
+    mobileNavigation?: 'tab-bar' | 'page-bar' | 'none';
+    hideFooterOnMobile?: boolean;
   }
 }

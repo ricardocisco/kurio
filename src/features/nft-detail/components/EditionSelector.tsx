@@ -11,7 +11,6 @@ interface EditionSelectorProps {
   onSelect: (editionId: string) => void;
 }
 
-/** Edition pills (1/1, 1/10, 1/50, ABERTA) as a native radio group. Sold-out editions are disabled. */
 export function EditionSelector({ editions, selectedId, onSelect }: EditionSelectorProps) {
   const name = useId();
   const selected = editions.find((edition) => edition.id === selectedId);

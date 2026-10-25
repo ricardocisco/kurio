@@ -16,7 +16,6 @@ interface HomePageProps {
 }
 
 export function HomePage({ search, onSearchChange }: HomePageProps) {
-  // Only the hero for the current viewport is mounted, so the LCP image is downloaded once.
   const isDesktop = useMediaQuery(DESKTOP_MEDIA_QUERY);
 
   return (

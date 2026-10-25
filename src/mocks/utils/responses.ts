@@ -28,7 +28,6 @@ interface ErrorOptions {
   details?: Record<string, unknown>;
 }
 
-/** Builds an error response that follows the shared `ApiErrorBody` contract. */
 export function errorResponse(code: ApiErrorCode, message: string, options: ErrorOptions = {}) {
   const body: ApiErrorBody = {
     error: {
@@ -41,7 +40,6 @@ export function errorResponse(code: ApiErrorCode, message: string, options: Erro
   return HttpResponse.json(body, { status: options.status ?? STATUS_BY_CODE[code] });
 }
 
-/** Typed JSON helper so handlers can only return payloads that satisfy a contract type. */
 export function jsonResponse<TBody>(body: TBody, init?: ResponseInit) {
   return HttpResponse.json(body as Record<string, unknown>, init);
 }

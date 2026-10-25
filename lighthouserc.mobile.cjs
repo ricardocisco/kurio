@@ -1,7 +1,3 @@
-/**
- * Lighthouse CI: mobile profile (Moto G Power emulation, slow 4G throttling). Audits the optimized build (`npm run build`) served by
- * `vite preview`, with the default mock scenario. 3 runs per URL; LHCI reports the median run.
- */
 module.exports = {
   ci: {
     collect: {

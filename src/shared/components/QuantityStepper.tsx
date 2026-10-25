@@ -8,19 +8,13 @@ interface QuantityStepperProps {
   min?: number;
   max: number;
   onChange: (value: number) => void;
-  /** Accessible name, e.g. "Quantidade de Emerald Ape #042". */
   label: string;
-  /** Explains why "+" is disabled (stock or per-order limit). Announced politely. */
   limitMessage?: string;
   disabled?: boolean;
   size?: 'sm' | 'md';
   className?: string;
 }
 
-/**
- * Integer quantity control used on the detail page and in the cart. Quantities are always integers
- * and clamped to [min, max]; the limit reason is exposed as text, not only by a disabled button.
- */
 export function QuantityStepper({
   value,
   min = 1,

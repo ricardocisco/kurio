@@ -12,7 +12,6 @@ const baseProps: IconProps = {
   'aria-hidden': true,
 };
 
-/** Minimal outline glyphs for social networks (Lucide v1 no longer ships brand icons). */
 export function FacebookIcon(props: IconProps) {
   return (
     <svg {...baseProps} {...props}>

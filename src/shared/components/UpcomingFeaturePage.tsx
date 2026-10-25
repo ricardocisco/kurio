@@ -1,18 +1,16 @@
 import { Link } from '@tanstack/react-router';
 import { HammerIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 import { Button } from '@/shared/ui/button';
 
 interface UpcomingFeaturePageProps {
   title: string;
   phase: string;
+  children?: ReactNode;
 }
 
-/**
- * Temporary page for routes that exist in the route tree but whose feature is still being built.
- * It states clearly that nothing happens here yet, instead of pretending to work.
- */
-export function UpcomingFeaturePage({ title, phase }: UpcomingFeaturePageProps) {
+export function UpcomingFeaturePage({ title, phase, children }: UpcomingFeaturePageProps) {
   return (
     <section className="container-content py-16" aria-labelledby="upcoming-title">
       <div className="flex flex-col items-center gap-4 rounded-lg bg-card px-6 py-12 text-center">
@@ -24,6 +22,7 @@ export function UpcomingFeaturePage({ title, phase }: UpcomingFeaturePageProps) 
           Esta tela ainda está em desenvolvimento ({phase}). Nenhuma ação é executada aqui por
           enquanto.
         </p>
+        {children}
         <Button asChild variant="outline">
           <Link to="/">Voltar para o início</Link>
         </Button>

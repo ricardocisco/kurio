@@ -2,10 +2,6 @@ import type * as React from 'react';
 
 import { cn } from '@/shared/lib/cn';
 
-/**
- * Loading placeholder with a shimmer sweep. The sweep is disabled for users that prefer
- * reduced motion; the static block still preserves the final content dimensions (no CLS).
- */
 export function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div

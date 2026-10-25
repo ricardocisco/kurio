@@ -3,10 +3,6 @@ import { HeartIcon, ShoppingCartIcon } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 
-/**
- * Purchase and favorite actions. They stay disabled until the cart (phase 2.5) and favorites
- * (phase 2.4) are connected to the API, so the page never pretends an action succeeded.
- */
 export const PURCHASE_UNAVAILABLE_NOTE =
   'Compra e favoritos serão liberados nas próximas etapas do projeto.';
 

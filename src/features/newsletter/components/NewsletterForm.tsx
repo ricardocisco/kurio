@@ -12,7 +12,6 @@ import { cn } from '@/shared/lib/cn';
 
 import { subscribeToNewsletter } from '../api/newsletter.api';
 
-/** "Antecipe-se ao próximo lançamento" form from the footer, backed by the mock API. */
 export function NewsletterForm() {
   const inputId = useId();
   const messageId = useId();

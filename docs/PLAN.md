@@ -91,7 +91,7 @@ Convenções:
 - [x] Fixtures determinísticas (48 NFTs, 9 categorias, 3 redes) e 2 usuários.
 - [x] Seletor de cenário (`?scenario=`) e condições de rede (latência fixa/variável, falha, timeout, offline).
 - [x] Handlers do catálogo (listagem com busca/filtros/ordenação/paginação, destaque, detalhe).
-- [ ] Handlers de sessão (cadastro, login, `GET /session`, logout, expiração).
+- [x] Handlers de sessão (cadastro, login, `GET /session`, logout, expiração).
 - [ ] Favoritos, carrinho, cotação, pedidos (idempotência), perfil, carteiras.
 - [ ] Servidor Socket.IO simulado com `@mswjs/socket.io-binding` emitindo `nft.updated` e `order.updated`.
 - [ ] Painel de debug (só com mocks ligados): trocar cenário, resetar estado, disparar eventos pelo socket.
@@ -112,7 +112,12 @@ Convenções:
    - [x] Abas "Detalhes" e "Avaliações" (carregadas sob demanda, paginação infinita), "Mais desta coleção".
    - [x] Barra fixa de compra no mobile (esconde a tab bar via `staticData`).
    - [ ] Ligar "Comprar" (fase 2.5) e "Favoritar" (fase 2.4): hoje desabilitados com aviso.
-3. **Autenticação**: login, cadastro (conflito 409), sessão após refresh, guards com `beforeLoad` e `redirect` de volta.
+3. **Autenticação** ✅
+   - [x] Login e cadastro no diálogo do Figma (desktop) e em tela cheia (mobile), com validação compartilhada (zod) e erros da API nos campos.
+   - [x] Sessão por token recuperada após refresh; guard `_authenticated` com `redirect` de volta.
+   - [x] Expiração durante a navegação (guard revalida) e em qualquer chamada (listener de 401), com aviso e retomada.
+   - [x] Logout e troca de usuário limpam o cache privado (`['private', userId, ...]`).
+   - [ ] Expiração durante o checkout preservando o pedido em andamento (junto com a fase 2.6).
 4. **Favoritos**: atualização otimista com rollback (a interação otimista obrigatória).
 5. **Carrinho**: carrinho de visitante local, merge no login, cupom, resumo vindo da API.
 6. **Checkout**: cotação revalidada, chave de idempotência em `sessionStorage`, pedido pendente recuperável.
@@ -139,7 +144,7 @@ Convenções:
 
 1. [x] Busca, filtros combinados, ordenação, paginação e histórico (inclui respostas fora de ordem).
 2. [x] Acesso direto ao detalhe e NFT inexistente (mais edições, limites, avaliações e voltar ao catálogo).
-3. [ ] Cadastro, login, expiração, logout e troca de usuário.
+3. [x] Cadastro, login, expiração, logout e troca de usuário.
 4. [ ] Favoritos com falha de mutation e rollback.
 5. [ ] Carrinho: quantidades, remoção, cupom, persistência após refresh e login.
 6. [ ] Compra completa até o recibo.
@@ -147,7 +152,7 @@ Convenções:
 8. [ ] Perfil, avatar, senha e carteiras com erros de validação.
 9. [ ] Preço/disponibilidade alterados via Socket.IO durante o checkout.
 10. [ ] Eventos duplicados ou antigos, desconexão e retomada de pedido pendente.
-11. [ ] Teclado, foco de dialogs e validação de formulários.
+11. [ ] Teclado, foco de dialogs e validação de formulários. _(dialog de login e formulários de conta cobertos)_
 12. [x] Skeletons em rede lenta, erro e nova tentativa (catálogo; repetir nas próximas telas).
 
 - [ ] Regressão visual: início, detalhe, carrinho, pagamento (desktop e mobile), com dados estáveis e relógio fixo.

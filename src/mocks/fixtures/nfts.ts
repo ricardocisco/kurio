@@ -10,12 +10,6 @@ import { addEth, multiplyEth } from '@/shared/lib/money';
 
 import { createSeededRandom } from '../utils/random';
 
-/**
- * Deterministic NFT catalog. The same seed always produces the same 48 items, so E2E tests and
- * visual baselines are stable. The first page (sorted by "recent") mirrors the Figma home frame.
- */
-
-/** Fixed clock for fixtures: "new" listings and dates never drift between runs. */
 export const MOCK_REFERENCE_DATE = new Date('2026-10-01T12:00:00.000Z');
 export const NEW_LISTING_WINDOW_DAYS = 21;
 
@@ -50,11 +44,9 @@ interface NftSeed {
   category?: CategoryId;
   network?: NetworkId;
   isTrending?: boolean;
-  /** Overrides the generated rating (the Figma detail frame shows 4.8 with 19 reviews). */
   rating?: { average: number; count: number };
 }
 
-/** Items shown on the first catalog page of the Figma home frame, in display order. */
 const FIGMA_SEEDS: NftSeed[] = [
   {
     name: 'Emerald Ape',
@@ -259,7 +251,6 @@ function buildEditions(id: string, basePrice: string, random: () => number): Nft
   return [unique, ten, fifty, open];
 }
 
-/** Always consumes the random numbers, so an override never shifts the rest of the sequence. */
 function resolveRating(override: NftSeed['rating'], random: () => number) {
   const generated = {
     average: Math.round((4 + random()) * 10) / 10,
@@ -319,7 +310,6 @@ function generatedSeeds(random: () => number): NftSeed[] {
   for (let index = FIGMA_SEEDS.length; index < TOTAL_ITEMS; index += 1) {
     const prefix = NAME_PREFIXES[index % NAME_PREFIXES.length] ?? 'Amber';
     const suffix = NAME_SUFFIXES[(index * 7) % NAME_SUFFIXES.length] ?? 'Monarch';
-    // The first two generated items pin the price range shown in Figma (0.02 - 12.30 ETH).
     const randomCents = 2 + Math.floor(random() * 1228);
     const cents =
       index === FIGMA_SEEDS.length ? 2 : index === FIGMA_SEEDS.length + 1 ? 1230 : randomCents;

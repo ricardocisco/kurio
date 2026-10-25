@@ -3,14 +3,12 @@ import { ChevronLeftIcon, HeartIcon } from 'lucide-react';
 
 import { PURCHASE_UNAVAILABLE_NOTE } from './PurchaseActions';
 
-/** Top bar of the mobile detail frame: back + favorite (favorites arrive in phase 2.4). */
 export function MobileDetailHeader() {
   const router = useRouter();
   const navigate = useNavigate();
   const canGoBack = useCanGoBack();
 
   const handleBack = () => {
-    // Direct access has no in-app history: fall back to the marketplace instead of leaving the site.
     if (canGoBack) router.history.back();
     else void navigate({ to: '/marketplace' });
   };

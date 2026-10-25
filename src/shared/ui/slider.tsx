@@ -4,7 +4,6 @@ import type * as React from 'react';
 import { cn } from '@/shared/lib/cn';
 
 interface SliderProps extends React.ComponentProps<typeof SliderPrimitive.Root> {
-  /** Accessible names for each thumb, e.g. ["Preço mínimo", "Preço máximo"]. */
   thumbLabels?: string[];
 }
 

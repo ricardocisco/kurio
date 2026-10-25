@@ -1,14 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4173;
-/** Set PLAYWRIGHT_BASE_URL to test a deployed build (e.g. the Vercel URL) instead of a local one. */
 const EXTERNAL_BASE_URL = process.env.PLAYWRIGHT_BASE_URL;
 const BASE_URL = EXTERNAL_BASE_URL ?? `http://localhost:${PORT}`;
 
-/**
- * E2E tests run against the optimized build with the MSW mock layer enabled (same artifact as the
- * public demo). Every test gets a fresh browser context, so mock state (localStorage) is isolated.
- */
 export default defineConfig({
   testDir: './e2e/specs',
   snapshotPathTemplate: '{testDir}/__screenshots__/{testFilePath}/{projectName}/{arg}{ext}',

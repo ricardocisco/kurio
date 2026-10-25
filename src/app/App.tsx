@@ -2,10 +2,13 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import { useState } from 'react';
 
+import { configureAuthTransport } from '@/features/auth/model/session-token';
 import { Toaster } from '@/shared/ui/sonner';
 
 import { createQueryClient } from './query-client';
 import { createAppRouter } from './router';
+
+configureAuthTransport();
 
 export function App() {
   const [queryClient] = useState(createQueryClient);

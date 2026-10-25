@@ -7,7 +7,6 @@ import { cn } from '@/shared/lib/cn';
 const tabClass =
   'flex size-12 flex-col items-center justify-center rounded-full text-text-secondary transition-colors hover:text-primary aria-[current=page]:text-primary';
 
-/** Bottom navigation from the mobile frames (visible below the `md` breakpoint). */
 export function MobileTabBar() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const showComingSoon = useComingSoon();

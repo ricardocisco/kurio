@@ -1,6 +1,5 @@
 import type { NftDetail, NftSummary } from '@/shared/contracts/nft';
 
-/** Projects the stored NFT record to the listing contract (no heavy detail fields). */
 export function toNftSummary(nft: NftDetail): NftSummary {
   return {
     id: nft.id,

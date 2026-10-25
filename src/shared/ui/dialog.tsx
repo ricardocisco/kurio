@@ -28,7 +28,6 @@ export function DialogOverlay({
 
 interface DialogContentProps extends React.ComponentProps<typeof DialogPrimitive.Content> {
   showCloseButton?: boolean;
-  /** Copper bar at the bottom of the card, as in the Figma login/confirmation dialogs. */
   withAccentBar?: boolean;
 }
 

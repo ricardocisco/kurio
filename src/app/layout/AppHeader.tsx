@@ -1,6 +1,8 @@
 import { Link, useRouterState } from '@tanstack/react-router';
 import { LogInIcon, ShoppingCartIcon } from 'lucide-react';
 
+import { UserMenu } from '@/features/auth/components/UserMenu';
+import { useSession } from '@/features/auth/hooks/use-session';
 import { Logo } from '@/shared/components/Logo';
 import { useComingSoon } from '@/shared/hooks/use-coming-soon';
 import { cn } from '@/shared/lib/cn';
@@ -13,9 +15,10 @@ const navItemClass =
   'relative inline-flex h-header items-center px-1 text-sm text-text-secondary transition-colors hover:text-primary after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:bg-transparent';
 const navItemActiveClass = 'font-medium text-primary after:bg-primary';
 
-/** Desktop/tablet header (hidden on mobile, where the bottom tab bar is the primary nav). */
 export function AppHeader() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const currentHref = useRouterState({ select: (state) => state.location.href });
+  const { user, isResolving } = useSession();
   const showComingSoon = useComingSoon();
 
   return (
@@ -59,12 +62,24 @@ export function AppHeader() {
               <ShoppingCartIcon className="size-5" aria-hidden="true" />
             </Link>
           </Button>
-          <Button asChild size="sm" className="ml-2 gap-1.5">
-            <Link to="/login">
-              <LogInIcon aria-hidden="true" />
-              Entrar
-            </Link>
-          </Button>
+          {isResolving ? (
+            <span className="ml-2 h-8 w-24" aria-hidden="true" />
+          ) : user ? (
+            <UserMenu user={user} />
+          ) : (
+            <Button asChild size="sm" className="ml-2 gap-1.5">
+              <Link
+                to="/login"
+                search={{
+                  redirect:
+                    pathname === '/login' || pathname === '/register' ? undefined : currentHref,
+                }}
+              >
+                <LogInIcon aria-hidden="true" />
+                Entrar
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

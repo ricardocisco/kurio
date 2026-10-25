@@ -17,7 +17,6 @@ interface Chip {
   patch: CatalogSearchPatch;
 }
 
-/** Removable chips for every active filter, plus "clear all". */
 export function ActiveFilters({ search, facets, onSearchChange }: ActiveFiltersProps) {
   const labelFor = (list: { id: string; label: string }[] | undefined, id: string) =>
     list?.find((option) => option.id === id)?.label ?? id;

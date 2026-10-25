@@ -2,19 +2,8 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { catalogCardNames, openApp } from '../support/app';
 
-/**
- * Scenario 2 of the challenge: direct access to the detail page and non-existent resource,
- * plus editions, quantity limits, reviews and navigation back to the catalog.
- *
- * Fixture facts used here (deterministic seed):
- * - emerald-ape-0042: 1/50 edition (default) with 26 available, max 10 per order.
- * - sage-nomad-0009: 1/10 edition with only 2 available (stock limit below the per-order max).
- * - cosmic-bloom-0118: 1/1 edition sold out.
- */
-
 const editionGroup = (page: Page) => page.getByRole('group', { name: 'Edição:' });
 
-/** The visible pill is the label of a visually hidden native radio. */
 const editionLabel = (page: Page, label: string) =>
   editionGroup(page)
     .locator('label')
@@ -83,7 +72,6 @@ test.describe('NFT detail', () => {
     const stepper = (name: string) =>
       page.getByRole('group', { name: `Quantidade de ${name}` }).locator('visible=true');
 
-    // Stock limit: only 2 units of the 1/10 edition are left.
     await openApp(page, '/nfts/sage-nomad-0009');
     await editionLabel(page, '1/10').click();
     const increase = stepper('Sage Nomad #009').getByRole('button', {
@@ -96,7 +84,6 @@ test.describe('NFT detail', () => {
       page.getByText('Apenas 2 unidades disponíveis.').locator('visible=true'),
     ).toBeVisible();
 
-    // Per-order limit: the 1/50 edition allows at most 10 per order.
     await openApp(page, '/nfts/emerald-ape-0042');
     const emeraldIncrease = stepper('Emerald Ape #042').getByRole('button', {
       name: 'Aumentar quantidade',

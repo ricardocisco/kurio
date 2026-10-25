@@ -13,7 +13,6 @@ import {
 } from '@/shared/ui/dialog';
 import { Input } from '@/shared/ui/input';
 
-/** Header search: opens a dialog and sends the term to the marketplace catalog (URL state). */
 export function HeaderSearch() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);

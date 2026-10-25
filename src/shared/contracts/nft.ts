@@ -29,7 +29,6 @@ export type Rarity = z.infer<typeof raritySchema>;
 
 export const nftImageSchema = z.object({
   alt: z.string(),
-  /** Responsive sources: ~400px, ~800px and ~1200px wide. */
   small: z.string(),
   medium: z.string(),
   large: z.string(),
@@ -41,10 +40,8 @@ export type EditionKind = z.infer<typeof editionKindSchema>;
 
 export const nftEditionSchema = z.object({
   id: z.string(),
-  /** Label as displayed in the design, e.g. "1/1", "1/10", "1/50", "ABERTA". */
   label: z.string(),
   kind: editionKindSchema,
-  /** Total supply; `null` for open editions. */
   supply: positiveIntSchema.nullable(),
   available: nonNegativeIntSchema,
   maxPerOrder: positiveIntSchema,
@@ -60,16 +57,13 @@ export const nftSummarySchema = z.object({
   category: categoryIdSchema,
   network: networkIdSchema,
   image: nftImageSchema,
-  /** Price of the default edition (the one pre-selected on the detail page). */
   price: ethAmountSchema,
-  /** Previous price when the item is discounted; rendered struck-through. */
   previousPrice: ethAmountSchema.nullable(),
   rarity: raritySchema,
   isTrending: z.boolean(),
   isSoldOut: z.boolean(),
   listedAt: isoDateTimeSchema,
   rating: z.object({ average: z.number().min(0).max(5), count: nonNegativeIntSchema }),
-  /** Monotonic version used to reconcile REST data with realtime events. */
   version: positiveIntSchema,
 });
 export type NftSummary = z.infer<typeof nftSummarySchema>;
@@ -90,10 +84,6 @@ export const nftDetailSchema = nftSummarySchema.extend({
 });
 export type NftDetail = z.infer<typeof nftDetailSchema>;
 
-/* ------------------------------------------------------------------------------------------------
- * Catalog listing
- * ---------------------------------------------------------------------------------------------- */
-
 export const catalogTabSchema = z.enum(['all', 'new', 'trending']);
 export type CatalogTab = z.infer<typeof catalogTabSchema>;
 
@@ -102,7 +92,6 @@ export type CatalogSort = z.infer<typeof catalogSortSchema>;
 
 export const CATALOG_PAGE_SIZE = 9;
 
-/** Comma-separated list in the query string, e.g. `?categories=music,gaming`. */
 function csvListSchema<TItem extends z.ZodType<string, string>>(item: TItem) {
   return z
     .string()
@@ -111,10 +100,6 @@ function csvListSchema<TItem extends z.ZodType<string, string>>(item: TItem) {
     .pipe(z.array(item));
 }
 
-/**
- * Query string accepted by `GET /nfts`. The API (MSW handler) validates incoming requests with this
- * schema and the client builds its params from the output type, so both sides share one contract.
- */
 export const catalogQueryParamsSchema = z.object({
   search: z.string().trim().max(80).optional(),
   tab: catalogTabSchema.default('all'),
@@ -149,10 +134,6 @@ export const featuredNftsSchema = z.object({
   spotlight: nftSummarySchema,
 });
 export type FeaturedNfts = z.infer<typeof featuredNftsSchema>;
-
-/* ------------------------------------------------------------------------------------------------
- * Detail page: reviews and related items
- * ---------------------------------------------------------------------------------------------- */
 
 export const NFT_REVIEWS_PAGE_SIZE = 5;
 

@@ -20,7 +20,6 @@ export const Route = createFileRoute('/nfts/$nftId')({
       throw error;
     }
   },
-  // Show the skeleton quickly on slow networks, and keep it long enough to avoid a flash.
   pendingMs: 150,
   pendingMinMs: 400,
   pendingComponent: NftDetailSkeleton,

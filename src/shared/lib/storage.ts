@@ -1,7 +1,3 @@
-/**
- * Safe wrappers around Web Storage. Storage can throw (private mode, quota, disabled cookies),
- * so every access is guarded and falls back gracefully.
- */
 type StorageArea = 'local' | 'session';
 
 function getArea(area: StorageArea): Storage | null {
@@ -29,7 +25,7 @@ export function writeStorage(key: string, value: unknown, area: StorageArea = 'l
   try {
     storage.setItem(key, JSON.stringify(value));
   } catch {
-    // Quota exceeded or storage disabled: the app keeps working with in-memory state.
+    return;
   }
 }
 
@@ -39,13 +35,13 @@ export function removeStorage(key: string, area: StorageArea = 'local'): void {
   try {
     storage.removeItem(key);
   } catch {
-    // Ignored on purpose, see readStorage.
+    return;
   }
 }
 
-/** Namespaced storage keys used by the application (mocks use their own namespace). */
 export const STORAGE_KEYS = {
   sessionToken: 'kurio.session.token',
+  sessionExpired: 'kurio.session.expired',
   guestCart: 'kurio.cart.guest',
   pendingCheckout: 'kurio.checkout.pending',
 } as const;

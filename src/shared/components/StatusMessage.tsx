@@ -12,7 +12,6 @@ interface StatusMessageProps {
   className?: string;
 }
 
-/** Shared visual for empty and error states. Errors use `role="alert"` to be announced. */
 export function StatusMessage({
   variant,
   title,

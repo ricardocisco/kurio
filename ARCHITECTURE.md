@@ -9,6 +9,7 @@ Documento vivo: cada fase do [plano](docs/PLAN.md) atualiza as seções correspo
 3. **Mocks só na rede.** O app não sabe que o MSW existe: nenhum componente, hook ou cliente Axios contém dados fictícios ou caminhos alternativos. Uma regra de ESLint (`no-restricted-imports`) bloqueia `@/mocks` fora de `src/app/bootstrap.ts`.
 4. **Estado na fonte certa:** estado do servidor no TanStack Query, estado navegável na URL (TanStack Router), estado efêmero de UI em `useState`. Sem store global.
 5. **Código em inglês, interface em português.**
+6. **Código sem comentários.** Nomes de funções, tipos e testes carregam a intenção; as decisões ficam documentadas aqui.
 
 ## Estrutura
 
@@ -111,6 +112,23 @@ Detalhe do NFT:
 
 Próximos contratos (sessão, favoritos, carrinho, cotação, pedidos, perfil, carteiras e eventos Socket.IO) serão documentados aqui conforme as fases avançam.
 
+## Sessão e autenticação
+
+| Método   | Rota           | Resposta                                      | Erros                                                                             |
+| -------- | -------------- | --------------------------------------------- | --------------------------------------------------------------------------------- |
+| `POST`   | `/api/users`   | `AuthResult` (201: token, expiração, usuário) | 422 `VALIDATION_ERROR`, 409 `EMAIL_ALREADY_REGISTERED` / `USERNAME_ALREADY_TAKEN` |
+| `POST`   | `/api/session` | `AuthResult`                                  | 422 `VALIDATION_ERROR`, 401 `INVALID_CREDENTIALS`                                 |
+| `GET`    | `/api/session` | `Session`                                     | 401 `UNAUTHENTICATED` / `SESSION_EXPIRED`                                         |
+| `DELETE` | `/api/session` | 204                                           | —                                                                                 |
+
+- **Token:** opaco, enviado como `Authorization: Bearer` pelo Axios (o _token provider_ é registrado pela feature de auth, então `shared/` não depende dela). Fica no `localStorage` para sobreviver ao refresh; a senha nunca é armazenada no cliente. No mock, a sessão dura 30 min e a senha é guardada como SHA-256 com salt.
+- **Estado:** a sessão é uma query (`['session']`, `staleTime` 60 s). Sem token, a query resolve `null` sem chamar a API.
+- **Rotas privadas:** ficam sob o layout `_authenticated`, cujo `beforeLoad` revalida a sessão a cada navegação (`staleTime: 0`) e redireciona para `/login?redirect=<url atual>`. Checkout, pedidos, perfil e carteiras estão sob esse layout.
+- **Expiração:** detectada (1) no guard ao navegar e (2) em qualquer resposta 401, pelo `SessionWatcher` (assina `onUnauthorized` do cliente HTTP). Ele encerra a sessão local, avisa o usuário e, se a página atual for privada, leva ao login com `reason=expired`. O aviso sobrevive a um refresh (`sessionStorage`) e o login devolve o usuário para a URL de origem.
+- **Isolamento:** dados privados usam chaves `['private', userId, ...]`. Login, logout e troca de usuário cancelam e removem esse escopo inteiro; dados públicos (catálogo) continuam em cache.
+- **Formulários:** os mesmos schemas zod validam no cliente (react-hook-form) e no mock. Erros da API chegam em `fieldErrors` e são aplicados ao campo correspondente (com foco no primeiro); os demais aparecem em um alerta do formulário.
+- **Login social e "Esqueceu a senha?":** fora do escopo; informam indisponibilidade.
+
 ## Detalhe do NFT
 
 - **Carregamento:** o loader usa `ensureQueryData` (bloqueia a rota) e converte `NOT_FOUND` em `notFound()`, exibindo o `notFoundComponent` da rota. O `pendingComponent` (skeleton com o mesmo layout) aparece após 150 ms e fica pelo menos 400 ms, sem piscar. A página usa `useSuspenseQuery`, então continua inscrita no cache para receber atualizações (inclusive os eventos da fase 3).
@@ -130,18 +148,19 @@ Próximos contratos (sessão, favoritos, carrinho, cotação, pedidos, perfil, c
 
 ## Desvios e substituições em relação ao Figma
 
-| Item                                                                    | Decisão                                                                                                                             |
-| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Tokens de cor                                                           | O arquivo está em modo somente leitura (sem Dev Mode). As cores foram amostradas do protótipo renderizado e consolidadas em tokens. |
-| Imagens                                                                 | As 4 ilustrações originais do arquivo foram exportadas e convertidas para WebP em 400/800/1200 px.                                  |
-| Ícones sociais                                                          | Lucide v1 não traz mais ícones de marca; foram desenhados glifos simples em SVG.                                                    |
-| Itens de navegação "Criadores" e "Aprenda", links de ajuda e "Ler mais" | Fora do escopo: mostram um aviso de "ainda não disponível" em vez de simular uma página.                                            |
-| "Mercado"                                                               | Rota `/marketplace` com o catálogo completo (mesmo componente da home, com estado próprio na URL).                                  |
-| Busca no desktop                                                        | O Figma só mostra o ícone. Ele abre um diálogo de busca que envia o termo para o Mercado.                                           |
-| Rótulos "Contrato" e "Direitos autorais" (detalhe)                      | No Figma os textos estão trocados entre os rótulos; cada texto foi colocado sob o rótulo correspondente.                            |
-| Compartilhar (detalhe)                                                  | Links reais de compartilhamento (LinkedIn, e-mail, X), em vez de ícones sem ação.                                                   |
-| "Comprar" e "Favoritar" (detalhe)                                       | Desabilitados com aviso até as fases 2.4/2.5, para não aparentar sucesso.                                                           |
-| Tab bar mobile                                                          | O botão central leva ao Mercado; "Favoritos" informa indisponibilidade até a fase 2.4.                                              |
+| Item                                                                    | Decisão                                                                                                                                                                                                                                   |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tokens de cor                                                           | O arquivo está em modo somente leitura (sem Dev Mode). As cores foram amostradas do protótipo renderizado e consolidadas em tokens.                                                                                                       |
+| Imagens                                                                 | As 4 ilustrações originais do arquivo foram exportadas e convertidas para WebP em 400/800/1200 px.                                                                                                                                        |
+| Ícones sociais                                                          | Lucide v1 não traz mais ícones de marca; foram desenhados glifos simples em SVG.                                                                                                                                                          |
+| Itens de navegação "Criadores" e "Aprenda", links de ajuda e "Ler mais" | Fora do escopo: mostram um aviso de "ainda não disponível" em vez de simular uma página.                                                                                                                                                  |
+| "Mercado"                                                               | Rota `/marketplace` com o catálogo completo (mesmo componente da home, com estado próprio na URL).                                                                                                                                        |
+| Busca no desktop                                                        | O Figma só mostra o ícone. Ele abre um diálogo de busca que envia o termo para o Mercado.                                                                                                                                                 |
+| Login/cadastro                                                          | Rotas `/login` e `/register`. No desktop, o diálogo do Figma abre sobre a home (inerte ao fundo); no mobile, tela cheia como nos frames. Labels ficam visualmente ocultos (o Figma usa só placeholder) mas existem para leitores de tela. |
+| Rótulos "Contrato" e "Direitos autorais" (detalhe)                      | No Figma os textos estão trocados entre os rótulos; cada texto foi colocado sob o rótulo correspondente.                                                                                                                                  |
+| Compartilhar (detalhe)                                                  | Links reais de compartilhamento (LinkedIn, e-mail, X), em vez de ícones sem ação.                                                                                                                                                         |
+| "Comprar" e "Favoritar" (detalhe)                                       | Desabilitados com aviso até as fases 2.4/2.5, para não aparentar sucesso.                                                                                                                                                                 |
+| Tab bar mobile                                                          | O botão central leva ao Mercado; "Favoritos" informa indisponibilidade até a fase 2.4.                                                                                                                                                    |
 
 ## Limitações conhecidas (até aqui)
 

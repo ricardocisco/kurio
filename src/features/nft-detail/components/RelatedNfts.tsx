@@ -7,7 +7,6 @@ import { ScrollCarousel } from '@/shared/components/ScrollCarousel';
 const ITEM_CLASS = 'basis-[45%] sm:basis-[30%] md:basis-[calc((100%-4rem)/5)]';
 const IMAGE_SIZES = '(min-width: 1280px) 225px, (min-width: 768px) 18vw, 45vw';
 
-/** "Mais desta coleção" carousel. Hidden when the API returns nothing or fails (non-critical). */
 export function RelatedNfts({
   nftId,
   title = 'Mais desta coleção',

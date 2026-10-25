@@ -17,10 +17,6 @@ const priceFormatter = new Intl.NumberFormat('pt-BR', {
   maximumFractionDigits: 2,
 });
 
-/**
- * Price range slider. The slider works with numbers for pointer/keyboard interaction only; the
- * applied values are converted back to 2-decimal strings before reaching the URL and the API.
- */
 export function PriceRangeFilter({ range, minPrice, maxPrice, onApply }: PriceRangeFilterProps) {
   const labelId = useId();
   const bounds = [Number(range.min), Number(range.max)] as const;

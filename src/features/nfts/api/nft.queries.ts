@@ -10,10 +10,6 @@ import {
   fetchRelatedNfts,
 } from './nfts.api';
 
-/**
- * Query key factory. Public NFT data is not user-scoped; every parameter that changes the response
- * is part of the key, so results are isolated per query and never mixed between filters.
- */
 export const nftKeys = {
   all: ['nfts'] as const,
   lists: () => [...nftKeys.all, 'list'] as const,
@@ -29,7 +25,6 @@ export function catalogPageQueryOptions(query: CatalogQuery) {
   return queryOptions({
     queryKey: nftKeys.list(query),
     queryFn: ({ signal }) => fetchCatalogPage(query, signal),
-    // Keeps the previous page on screen while the next one loads (no layout jump).
     placeholderData: keepPreviousData,
   });
 }

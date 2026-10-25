@@ -5,7 +5,6 @@ import { featuredNftsQueryOptions } from '@/features/nfts/api/nft.queries';
 import { NftImage } from '@/features/nfts/components/NftImage';
 import { Skeleton } from '@/shared/ui/skeleton';
 
-/** "NFT EM DESTAQUE / OFERTA LIMITADA" card under the desktop filters. */
 export function SpotlightCard() {
   const featured = useQuery(featuredNftsQueryOptions());
   const spotlight = featured.data?.spotlight;

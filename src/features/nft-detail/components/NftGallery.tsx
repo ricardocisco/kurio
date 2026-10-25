@@ -11,7 +11,6 @@ interface NftGalleryProps {
   nftName: string;
 }
 
-/** Desktop gallery: vertical thumbnails + main image with a zoom dialog. Mobile shows the main image. */
 export function NftGallery({ images, nftName }: NftGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeImage = images[activeIndex] ?? images[0];

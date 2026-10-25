@@ -6,7 +6,6 @@ interface MarketplacePageProps {
   onSearchChange: CatalogSearchChangeHandler;
 }
 
-/** "Mercado": the full catalog without the home editorial sections. */
 export function MarketplacePage({ search, onSearchChange }: MarketplacePageProps) {
   return (
     <div className="flex flex-col gap-6 pt-4 md:pt-8">

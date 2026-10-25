@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 
 import { SiteLayout } from '@/app/layout/SiteLayout';
 import type { RouterContext } from '@/app/router';
+import { SessionWatcher } from '@/features/auth/components/SessionWatcher';
 
 const Devtools = import.meta.env.DEV ? lazy(() => import('@/app/devtools/Devtools')) : () => null;
 
@@ -17,6 +18,7 @@ function RootComponent() {
   return (
     <>
       <HeadContent />
+      <SessionWatcher />
       <SiteLayout>
         <Outlet />
       </SiteLayout>

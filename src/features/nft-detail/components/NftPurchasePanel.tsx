@@ -18,7 +18,6 @@ interface NftPurchasePanelProps {
   onQuantityChange: (quantity: number) => void;
   onEditionChange: (editionId: string) => void;
   shareUrl: string;
-  /** Id of the note explaining why purchase actions are disabled (shared with the mobile bar). */
   noteId: string;
 }
 

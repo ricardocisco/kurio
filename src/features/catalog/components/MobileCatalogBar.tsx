@@ -29,22 +29,18 @@ interface MobileCatalogBarProps {
 
 const SEARCH_DEBOUNCE_MS = 350;
 
-/** Mobile frame: "Explorar coleções" search field + filter drawer button. */
 export function MobileCatalogBar({ search, facets, onSearchChange }: MobileCatalogBarProps) {
   const inputId = useId();
   const [term, setTerm] = useState(search.q ?? '');
   const [syncedQuery, setSyncedQuery] = useState(search.q);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
-  // Sync the field when the URL changes elsewhere (chip removed, history navigation).
-  // Adjusting state during render avoids an extra effect pass (React "derived state" pattern).
   if (search.q !== syncedQuery) {
     setSyncedQuery(search.q);
     if ((search.q ?? '') !== term.trim()) setTerm(search.q ?? '');
   }
   const activeFilters = countActiveFilters(search);
 
-  // Typing replaces the history entry, so "back" does not step through every keystroke.
   const commitSearch = useDebouncedCallback((value: string) => {
     onSearchChange({ q: value.trim() || undefined }, { replace: true });
   }, SEARCH_DEBOUNCE_MS);
