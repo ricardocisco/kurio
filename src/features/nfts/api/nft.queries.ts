@@ -1,8 +1,14 @@
-import { keepPreviousData, queryOptions } from '@tanstack/react-query';
+import { infiniteQueryOptions, keepPreviousData, queryOptions } from '@tanstack/react-query';
 
 import type { CatalogQuery } from '@/shared/contracts/nft';
 
-import { fetchCatalogPage, fetchFeaturedNfts, fetchNftDetail } from './nfts.api';
+import {
+  fetchCatalogPage,
+  fetchFeaturedNfts,
+  fetchNftDetail,
+  fetchNftReviews,
+  fetchRelatedNfts,
+} from './nfts.api';
 
 /**
  * Query key factory. Public NFT data is not user-scoped; every parameter that changes the response
@@ -15,6 +21,8 @@ export const nftKeys = {
   featured: () => [...nftKeys.all, 'featured'] as const,
   details: () => [...nftKeys.all, 'detail'] as const,
   detail: (nftId: string) => [...nftKeys.details(), nftId] as const,
+  reviews: (nftId: string) => [...nftKeys.detail(nftId), 'reviews'] as const,
+  related: (nftId: string) => [...nftKeys.detail(nftId), 'related'] as const,
 };
 
 export function catalogPageQueryOptions(query: CatalogQuery) {
@@ -38,5 +46,24 @@ export function nftDetailQueryOptions(nftId: string) {
   return queryOptions({
     queryKey: nftKeys.detail(nftId),
     queryFn: ({ signal }) => fetchNftDetail(nftId, signal),
+  });
+}
+
+export function nftReviewsInfiniteQueryOptions(nftId: string) {
+  return infiniteQueryOptions({
+    queryKey: nftKeys.reviews(nftId),
+    queryFn: ({ pageParam, signal }) => fetchNftReviews(nftId, pageParam, signal),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined,
+    staleTime: 5 * 60_000,
+  });
+}
+
+export function relatedNftsQueryOptions(nftId: string) {
+  return queryOptions({
+    queryKey: nftKeys.related(nftId),
+    queryFn: ({ signal }) => fetchRelatedNfts(nftId, signal),
+    staleTime: 5 * 60_000,
   });
 }

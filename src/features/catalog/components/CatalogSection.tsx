@@ -68,14 +68,15 @@ export function CatalogSection({
       aria-labelledby="catalog-title"
       className="container-content scroll-mt-24"
     >
-      <h2 id="catalog-title" className="sr-only">
-        {title}
-      </h2>
-
       <div className="flex flex-col gap-6 md:hidden">
         <MobileCatalogBar search={search} facets={facets} onSearchChange={onSearchChange} />
         {mobileHeader}
       </div>
+
+      {/* After the mobile hero (which holds the page h1), so the heading order stays h1 > h2 > h3. */}
+      <h2 id="catalog-title" className="sr-only">
+        {title}
+      </h2>
 
       <div className="mt-6 grid gap-8 md:mt-0 md:grid-cols-[minmax(0,14rem)_1fr] lg:grid-cols-[var(--spacing-sidebar)_1fr] lg:gap-12">
         <aside aria-label="Filtros do catálogo" className="hidden flex-col gap-6 md:flex">

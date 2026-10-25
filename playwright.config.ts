@@ -1,7 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4173;
-const BASE_URL = `http://localhost:${PORT}`;
+/** Set PLAYWRIGHT_BASE_URL to test a deployed build (e.g. the Vercel URL) instead of a local one. */
+const EXTERNAL_BASE_URL = process.env.PLAYWRIGHT_BASE_URL;
+const BASE_URL = EXTERNAL_BASE_URL ?? `http://localhost:${PORT}`;
 
 /**
  * E2E tests run against the optimized build with the MSW mock layer enabled (same artifact as the
@@ -37,11 +39,13 @@ export default defineConfig({
       use: { ...devices['Pixel 7'], viewport: { width: 390, height: 844 } },
     },
   ],
-  webServer: {
-    command: 'npm run build && npm run preview',
-    url: BASE_URL,
-    reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
-    env: { VITE_ENABLE_MOCKS: 'true', VITE_MOCK_SCENARIO: 'default' },
-  },
+  webServer: EXTERNAL_BASE_URL
+    ? undefined
+    : {
+        command: 'npm run build && npm run preview',
+        url: BASE_URL,
+        reuseExistingServer: !process.env.CI,
+        timeout: 180_000,
+        env: { VITE_ENABLE_MOCKS: 'true', VITE_MOCK_SCENARIO: 'default' },
+      },
 });

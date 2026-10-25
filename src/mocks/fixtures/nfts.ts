@@ -50,6 +50,8 @@ interface NftSeed {
   category?: CategoryId;
   network?: NetworkId;
   isTrending?: boolean;
+  /** Overrides the generated rating (the Figma detail frame shows 4.8 with 19 reviews). */
+  rating?: { average: number; count: number };
 }
 
 /** Items shown on the first catalog page of the Figma home frame, in display order. */
@@ -62,6 +64,7 @@ const FIGMA_SEEDS: NftSeed[] = [
     category: 'digital-art',
     network: 'ethereum',
     isTrending: true,
+    rating: { average: 4.8, count: 19 },
   },
   {
     name: 'Sage Nomad',
@@ -256,6 +259,15 @@ function buildEditions(id: string, basePrice: string, random: () => number): Nft
   return [unique, ten, fifty, open];
 }
 
+/** Always consumes the random numbers, so an override never shifts the rest of the sequence. */
+function resolveRating(override: NftSeed['rating'], random: () => number) {
+  const generated = {
+    average: Math.round((4 + random()) * 10) / 10,
+    count: 5 + Math.floor(random() * 40),
+  };
+  return override ?? generated;
+}
+
 function buildNft(seed: NftSeed, index: number, random: () => number): NftDetail {
   const id = `${slugify(seed.name)}-${padToken(seed.tokenNumber)}`;
   const tokenId = `#${padToken(seed.tokenNumber)}`;
@@ -282,7 +294,7 @@ function buildNft(seed: NftSeed, index: number, random: () => number): NftDetail
     isTrending: seed.isTrending ?? random() > 0.7,
     isSoldOut: editions.every((edition) => edition.available === 0),
     listedAt: listedAt.toISOString(),
-    rating: { average: Math.round((4 + random()) * 10) / 10, count: 5 + Math.floor(random() * 40) },
+    rating: resolveRating(seed.rating, random),
     version: 1,
     description: `Um colecionável digital 1/50 finalizado à mão da coleção ${collection.name}, verificado na ${networkLabel}, com arte desbloqueável e acesso para colecionadores.`,
     story: [

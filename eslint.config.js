@@ -46,7 +46,15 @@ export default defineConfig([
       '@typescript-eslint/only-throw-error': [
         'error',
         // TanStack Router uses `throw redirect()` / `throw notFound()`.
-        { allow: [{ from: 'package', package: '@tanstack/router-core', name: 'Redirect' }] },
+        {
+          allow: [
+            {
+              from: 'package',
+              package: '@tanstack/router-core',
+              name: ['Redirect', 'NotFoundError'],
+            },
+          ],
+        },
       ],
       eqeqeq: ['error', 'always'],
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],

@@ -102,7 +102,22 @@ Envelope de erro (todas as rotas):
 
 Facetas: a contagem de cada categoria considera todos os filtros ativos **exceto** o de categorias (o mesmo vale para redes), o padrão de busca facetada.
 
+Detalhe do NFT:
+
+| Método | Rota                            | Resposta                                       | Erros           |
+| ------ | ------------------------------- | ---------------------------------------------- | --------------- |
+| `GET`  | `/api/nfts/:nftId/reviews?page` | `NftReviewsPage` (5 por página)                | 404 `NOT_FOUND` |
+| `GET`  | `/api/nfts/:nftId/related`      | `RelatedNfts` (até 10: mesma coleção primeiro) | 404 `NOT_FOUND` |
+
 Próximos contratos (sessão, favoritos, carrinho, cotação, pedidos, perfil, carteiras e eventos Socket.IO) serão documentados aqui conforme as fases avançam.
+
+## Detalhe do NFT
+
+- **Carregamento:** o loader usa `ensureQueryData` (bloqueia a rota) e converte `NOT_FOUND` em `notFound()`, exibindo o `notFoundComponent` da rota. O `pendingComponent` (skeleton com o mesmo layout) aparece após 150 ms e fica pelo menos 400 ms, sem piscar. A página usa `useSuspenseQuery`, então continua inscrita no cache para receber atualizações (inclusive os eventos da fase 3).
+- **Edição:** fica na URL (`?edition=`, com `replace`), então um link compartilhado abre a mesma edição. `resolveSelectedEdition` respeita a edição pedida, mesmo esgotada (para explicar o motivo), senão usa a padrão, senão a primeira disponível.
+- **Quantidade:** sempre inteira e limitada por `min(disponível, máximo por pedido)`. O valor é recalculado a cada render, então se a disponibilidade cair (evento em tempo real) a quantidade acompanha. O motivo do limite aparece em texto.
+- **Avaliações:** `useInfiniteQuery` carregado só quando a aba é aberta (o Radix monta apenas o painel ativo).
+- **Layout mobile:** a rota declara `staticData.mobileNavigation = 'page-bar'`; o `SiteLayout` esconde a tab bar e reserva espaço para a barra fixa de compra.
 
 ## Acessibilidade (decisões já aplicadas)
 
@@ -123,9 +138,14 @@ Próximos contratos (sessão, favoritos, carrinho, cotação, pedidos, perfil, c
 | Itens de navegação "Criadores" e "Aprenda", links de ajuda e "Ler mais" | Fora do escopo: mostram um aviso de "ainda não disponível" em vez de simular uma página.                                            |
 | "Mercado"                                                               | Rota `/marketplace` com o catálogo completo (mesmo componente da home, com estado próprio na URL).                                  |
 | Busca no desktop                                                        | O Figma só mostra o ícone. Ele abre um diálogo de busca que envia o termo para o Mercado.                                           |
+| Rótulos "Contrato" e "Direitos autorais" (detalhe)                      | No Figma os textos estão trocados entre os rótulos; cada texto foi colocado sob o rótulo correspondente.                            |
+| Compartilhar (detalhe)                                                  | Links reais de compartilhamento (LinkedIn, e-mail, X), em vez de ícones sem ação.                                                   |
+| "Comprar" e "Favoritar" (detalhe)                                       | Desabilitados com aviso até as fases 2.4/2.5, para não aparentar sucesso.                                                           |
 | Tab bar mobile                                                          | O botão central leva ao Mercado; "Favoritos" informa indisponibilidade até a fase 2.4.                                              |
 
 ## Limitações conhecidas (até aqui)
+
+- Performance mobile abaixo da meta (76–79); causa e plano em `docs/PLAN.md`.
 
 - A binding `@mswjs/socket.io-binding` exige MSW 2.x; o projeto fixa `msw@^2.15`.
 - O chunk principal ainda é grande (~180 kB gzip) e o MSW adiciona ~165 kB gzip antes do primeiro render. Otimização prevista na fase 6.

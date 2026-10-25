@@ -149,3 +149,24 @@ export const featuredNftsSchema = z.object({
   spotlight: nftSummarySchema,
 });
 export type FeaturedNfts = z.infer<typeof featuredNftsSchema>;
+
+/* ------------------------------------------------------------------------------------------------
+ * Detail page: reviews and related items
+ * ---------------------------------------------------------------------------------------------- */
+
+export const NFT_REVIEWS_PAGE_SIZE = 5;
+
+export const nftReviewSchema = z.object({
+  id: z.string(),
+  authorName: z.string(),
+  rating: z.number().int().min(1).max(5),
+  comment: z.string(),
+  createdAt: isoDateTimeSchema,
+});
+export type NftReview = z.infer<typeof nftReviewSchema>;
+
+export const nftReviewsPageSchema = paginatedSchema(nftReviewSchema);
+export type NftReviewsPage = z.infer<typeof nftReviewsPageSchema>;
+
+export const relatedNftsSchema = z.object({ items: z.array(nftSummarySchema) });
+export type RelatedNfts = z.infer<typeof relatedNftsSchema>;

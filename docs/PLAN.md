@@ -105,7 +105,13 @@ Convenções:
    - [x] Skeletons com shimmer, estado vazio, erro com "tentar novamente".
    - [x] Drawer de filtros no mobile, busca com debounce e tab bar inferior.
    - [x] Banners (levam ao Mercado filtrado), "Diário da Cunhagem" e newsletter integrada ao mock (sem fingir sucesso).
-2. **Detalhe do NFT**: acesso direto, 404, edições indisponíveis, limite de quantidade, galeria.
+2. **Detalhe do NFT** ✅
+   - [x] Acesso direto (loader com `ensureQueryData`), 404 com `notFound()` e skeleton de rota.
+   - [x] Galeria com miniaturas e zoom, edições como radio group nativo (esgotadas desabilitadas), edição na URL.
+   - [x] Quantidade limitada por estoque e por pedido, com o motivo em texto.
+   - [x] Abas "Detalhes" e "Avaliações" (carregadas sob demanda, paginação infinita), "Mais desta coleção".
+   - [x] Barra fixa de compra no mobile (esconde a tab bar via `staticData`).
+   - [ ] Ligar "Comprar" (fase 2.5) e "Favoritar" (fase 2.4): hoje desabilitados com aviso.
 3. **Autenticação**: login, cadastro (conflito 409), sessão após refresh, guards com `beforeLoad` e `redirect` de volta.
 4. **Favoritos**: atualização otimista com rollback (a interação otimista obrigatória).
 5. **Carrinho**: carrinho de visitante local, merge no login, cupom, resumo vindo da API.
@@ -132,7 +138,7 @@ Convenções:
 ### Fase 5: Testes Playwright (escrever junto de cada fatia)
 
 1. [x] Busca, filtros combinados, ordenação, paginação e histórico (inclui respostas fora de ordem).
-2. [ ] Acesso direto ao detalhe e NFT inexistente.
+2. [x] Acesso direto ao detalhe e NFT inexistente (mais edições, limites, avaliações e voltar ao catálogo).
 3. [ ] Cadastro, login, expiração, logout e troca de usuário.
 4. [ ] Favoritos com falha de mutation e rollback.
 5. [ ] Carrinho: quantidades, remoção, cupom, persistência após refresh e login.
@@ -152,9 +158,20 @@ Convenções:
 - [ ] Registrar LCP, CLS, TBT e justificar o que ficar abaixo da meta (impacto do service worker do MSW e do socket).
 - [ ] `README.md` completo e `ARCHITECTURE.md` com contratos, eventos, sessão, carrinho, cache, reconciliação e desvios do Figma.
 
-### Linha de base (fim da fase 0)
+### Medições parciais (fim da fase 2.2)
 
-Lighthouse desktop na home, build otimizado com mocks, mediana de 3 execuções: **Performance 98, Accessibility 96 → corrigido (alvo de toque do carrossel), Best Practices 100, SEO 100**; LCP ≈ 1,0 s, CLS 0,004, TBT < 30 ms. O perfil mobile e a página de detalhe serão medidos quando o detalhe estiver pronto.
+Build otimizado com mocks, mediana de 3 execuções:
+
+| Página  | Perfil  | Perf. | A11y |  BP | SEO |   LCP |   CLS |    TBT |
+| ------- | ------- | ----: | ---: | --: | --: | ----: | ----: | -----: |
+| Início  | desktop |    98 |  100 | 100 | 100 | 1,1 s | 0,005 |  18 ms |
+| Detalhe | desktop |    99 |  100 | 100 | 100 | 0,9 s | 0,005 |   6 ms |
+| Início  | mobile  |    76 |  100 | 100 | 100 | 4,0 s | 0,026 | 250 ms |
+| Detalhe | mobile  |    79 |  100 | 100 | 100 | 4,0 s | 0,000 | 172 ms |
+
+Causa no mobile (4G simulado, CPU 4x): ~215 kB de JS do app + 160 kB do MSW antes do primeiro render (FCP ≈ 3,1 s).
+Experimento descartado: renderizar em paralelo com o boot do MSW piorou (64), porque os downloads disputam banda.
+Plano para a fase 6: analisar o bundle (zod, radix, router), separar vendor, adiar código não crítico (devtools já fora; dialog/sheet/select sob demanda) e avaliar `zod/mini` nos contratos.
 
 ## 5. Prioridade se o tempo apertar
 

@@ -110,23 +110,30 @@ export function isScenarioName(value: unknown): value is ScenarioName {
   return typeof value === 'string' && Object.hasOwn(SCENARIOS, value);
 }
 
-function resolveInitialScenario(): ScenarioName {
-  try {
-    const fromUrl = new URLSearchParams(window.location.search).get('scenario');
-    if (isScenarioName(fromUrl)) {
-      window.sessionStorage.setItem(SCENARIO_STORAGE_KEY, fromUrl);
-      return fromUrl;
-    }
-    const fromSession = window.sessionStorage.getItem(SCENARIO_STORAGE_KEY);
-    if (isScenarioName(fromSession)) return fromSession;
-  } catch {
-    // Storage unavailable: fall back to the configured default.
-  }
+function defaultScenario(): ScenarioName {
   return isScenarioName(env.VITE_MOCK_SCENARIO) ? env.VITE_MOCK_SCENARIO : 'default';
 }
 
-let activeScenario: ScenarioName = resolveInitialScenario();
+function readSessionScenario(): ScenarioName | null {
+  try {
+    const stored = window.sessionStorage.getItem(SCENARIO_STORAGE_KEY);
+    return isScenarioName(stored) ? stored : null;
+  } catch {
+    return null;
+  }
+}
+
+let activeScenario: ScenarioName = readSessionScenario() ?? defaultScenario();
 const scenarioListeners = new Set<(name: ScenarioName) => void>();
+
+/**
+ * Applies `?scenario=` from the URL the page was opened with. The bootstrap captures that URL
+ * before the first render, because the router may normalize the search params afterwards.
+ */
+export function initializeScenarioFromUrl(initialSearch: string): void {
+  const fromUrl = new URLSearchParams(initialSearch).get('scenario');
+  if (isScenarioName(fromUrl)) setActiveScenario(fromUrl);
+}
 
 export function getActiveScenarioName(): ScenarioName {
   return activeScenario;

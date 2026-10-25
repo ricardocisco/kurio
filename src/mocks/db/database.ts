@@ -7,11 +7,12 @@ import { createNftFixtures } from '../fixtures/nfts';
  * It is persisted to localStorage so refreshes keep the simulated backend state, and it can be
  * reset to a known fixture state at any time (`resetDatabase`).
  *
- * Bump `SCHEMA_VERSION` whenever the shape of `DatabaseState` changes: persisted snapshots from an
- * older version are discarded instead of being migrated.
+ * Bump `SCHEMA_VERSION` whenever the shape of `DatabaseState` OR the fixtures change: persisted
+ * snapshots from an older version are discarded instead of being migrated, so every visitor
+ * (including the public demo) sees the current fixtures.
  */
 const STORAGE_KEY = 'kurio.mocks.db';
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 
 export interface DatabaseState {
   schemaVersion: number;

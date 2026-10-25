@@ -27,4 +27,12 @@ declare module '@tanstack/react-router' {
   interface Register {
     router: ReturnType<typeof createAppRouter>;
   }
+
+  interface StaticDataRouteOption {
+    /**
+     * Mobile bottom navigation: the default tab bar, or a page-specific fixed bar
+     * (e.g. the purchase bar on the NFT detail), in which case the tab bar is hidden.
+     */
+    mobileNavigation?: 'tab-bar' | 'page-bar';
+  }
 }

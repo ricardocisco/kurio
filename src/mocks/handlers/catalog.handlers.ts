@@ -7,6 +7,9 @@ import {
   type CatalogQuery,
   type FeaturedNfts,
   type NftDetail,
+  type NftReviewsPage,
+  type RelatedNfts,
+  NFT_REVIEWS_PAGE_SIZE,
 } from '@/shared/contracts/nft';
 import { compareEth } from '@/shared/lib/money';
 
@@ -18,6 +21,7 @@ import {
   NETWORK_LABELS,
   NEW_LISTING_WINDOW_DAYS,
 } from '../fixtures/nfts';
+import { buildReviews } from '../fixtures/reviews';
 import { apiPath } from '../utils/api-path';
 import { toNftSummary } from '../utils/projections';
 import { errorResponse, jsonResponse } from '../utils/responses';
@@ -145,6 +149,40 @@ export const catalogHandlers = [
       totalItems: filtered.length,
       totalPages,
       facets: buildFacets(nfts, query),
+    });
+  }),
+
+  http.get<{ nftId: string }>(apiPath('/nfts/:nftId/reviews'), ({ params, request }) => {
+    const nft = listedNfts().find((item) => item.id === params.nftId);
+    if (!nft) return errorResponse('NOT_FOUND', 'NFT não encontrado.');
+
+    const page = Math.max(1, Number(new URL(request.url).searchParams.get('page') ?? 1) || 1);
+    const reviews = buildReviews(nft);
+    const start = (page - 1) * NFT_REVIEWS_PAGE_SIZE;
+
+    return jsonResponse<NftReviewsPage>({
+      items: reviews.slice(start, start + NFT_REVIEWS_PAGE_SIZE),
+      page,
+      pageSize: NFT_REVIEWS_PAGE_SIZE,
+      totalItems: reviews.length,
+      totalPages: Math.ceil(reviews.length / NFT_REVIEWS_PAGE_SIZE),
+    });
+  }),
+
+  http.get<{ nftId: string }>(apiPath('/nfts/:nftId/related'), ({ params }) => {
+    const nfts = listedNfts();
+    const nft = nfts.find((item) => item.id === params.nftId);
+    if (!nft) return errorResponse('NOT_FOUND', 'NFT não encontrado.');
+
+    // Same collection first, then the most recent listings, up to 10 items.
+    const others = nfts.filter((item) => item.id !== nft.id);
+    const sameCollection = others.filter((item) => item.collection.id === nft.collection.id);
+    const fallback = sortNfts(
+      others.filter((item) => item.collection.id !== nft.collection.id),
+      'recent',
+    );
+    return jsonResponse<RelatedNfts>({
+      items: [...sameCollection, ...fallback].slice(0, 10).map(toNftSummary),
     });
   }),
 

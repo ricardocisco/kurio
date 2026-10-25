@@ -7,7 +7,7 @@ React + TypeScript com TanStack Router/Query, Axios, Socket.IO, Tailwind CSS, sh
 - Arquitetura, contratos e decisões: [`ARCHITECTURE.md`](ARCHITECTURE.md)
 - Cenários e controle dos mocks: [`docs/MOCKS.md`](docs/MOCKS.md)
 
-> Status: **fase 0 (fundação) concluída e fatia do catálogo funcionando**. As demais telas já existem nas rotas e informam que estão em desenvolvimento.
+> Status: **fundação, catálogo e detalhe do NFT funcionando** (35 testes E2E). As demais telas já existem nas rotas e informam que estão em desenvolvimento. Demo: https://kurio-six.vercel.app
 
 ## Requisitos
 
@@ -48,6 +48,7 @@ Na primeira execução do Playwright, instale o navegador: `npx playwright insta
 | `npm run test:e2e`                        | Playwright (desktop e mobile, Chromium) sobre o build com mocks |
 | `npm run test:e2e:ui`                     | Playwright em modo UI                                           |
 | `npm run test:e2e:update`                 | Atualiza as baselines de regressão visual                       |
+| `npm run test:e2e:deployed`               | Roda os mesmos testes contra a URL publicada (sem build local)  |
 | `npm run test:e2e:report`                 | Abre o relatório HTML                                           |
 | `npm run lighthouse`                      | Build + Lighthouse CI (desktop e mobile, 3 execuções cada)      |
 
