@@ -27,14 +27,14 @@ export function MintJournal() {
           Histórias, guias e insights para colecionadores sobre o universo da propriedade digital.
         </p>
       </header>
-      <ul className="grid gap-5 sm:grid-cols-2 lg:max-w-[71.5rem] lg:grid-cols-4 lg:gap-6">
+      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
         {JOURNAL_ARTICLES.map((article) => (
           <li key={article.id}>
-            <article className="flex h-full flex-col overflow-hidden rounded-sm bg-card">
+            <article className="flex h-full flex-col overflow-hidden rounded-md bg-card">
               <NftImage
                 image={article.image}
                 sizes="(min-width: 1024px) 270px, (min-width: 640px) 45vw, 90vw"
-                className="aspect-[4/3] object-top lg:aspect-[11/8]"
+                className="aspect-4/3 object-top lg:aspect-11/8"
               />
               <div className="flex flex-1 flex-col gap-2 p-4 lg:gap-1.5 lg:pb-3">
                 <p className="text-[0.6875rem] text-text-secondary lg:text-[0.8125rem] lg:leading-[1.35]">

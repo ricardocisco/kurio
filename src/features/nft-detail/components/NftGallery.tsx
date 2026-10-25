@@ -39,7 +39,7 @@ export function NftGallery({ images, nftName }: NftGalleryProps) {
         </ul>
       )}
 
-      <div className="relative overflow-hidden rounded-2xl bg-card md:rounded-sm md:p-6">
+      <div className="relative overflow-hidden rounded-2xl bg-card md:rounded-2xl md:p-6">
         <NftImage
           image={activeImage}
           sizes="(min-width: 1280px) 400px, (min-width: 768px) 40vw, 100vw"

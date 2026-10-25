@@ -32,12 +32,12 @@ export function PromoBanners() {
   return (
     <section
       aria-label="Coleções em destaque"
-      className="container-content mt-16 grid gap-4 md:grid-cols-2 md:gap-7 lg:mt-10"
+      className="m-8 container-content grid gap-4 md:grid-cols-2 md:gap-7 lg:mt-8"
     >
       {PROMO_BANNERS.map((banner) => (
         <article
           key={banner.title}
-          className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] items-center overflow-hidden rounded-r-md bg-card lg:h-[15.625rem] lg:grid-cols-2"
+          className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] items-center rounded-2xl bg-card lg:grid-cols-2"
         >
           <NftImage
             image={banner.image}

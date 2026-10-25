@@ -26,8 +26,10 @@ export function NftCard({
   className,
 }: NftCardProps) {
   return (
-    <article className={cn('group relative flex flex-col gap-2 md:gap-3.5', className)}>
-      <div className="relative overflow-hidden rounded-2xl bg-card p-1 md:rounded-sm md:px-1 md:py-6">
+    <article
+      className={cn('group relative flex flex-col gap-2 rounded-xl bg-card md:gap-3.5', className)}
+    >
+      <div className="relative m-2 overflow-hidden rounded-2xl md:rounded-sm md:px-1 md:py-6">
         <NftImage
           image={nft.image}
           sizes={imageSizes}
@@ -35,12 +37,12 @@ export function NftCard({
           className="rounded-xl transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
         />
         {nft.rarity !== 'common' && (
-          <span className="absolute top-2 left-2 bg-primary px-3 py-1 text-xs font-bold text-primary-foreground uppercase md:top-3 md:left-3">
+          <span className="absolute rounded-tl-lg bg-primary px-3 py-1 text-xs font-bold text-primary-foreground uppercase md:top-6 md:left-1">
             {nft.rarity === 'rare' ? 'Raro' : 'Lendário'}
           </span>
         )}
         {action && (
-          <div className="absolute top-3 right-3 z-10 transition-opacity md:top-4 md:right-4 md:opacity-0 md:group-focus-within:opacity-100 md:group-hover:opacity-100 md:has-[[aria-pressed=true]]:opacity-100">
+          <div className="absolute z-10 transition-opacity md:top-6 md:right-1 md:opacity-0 md:group-focus-within:opacity-100 md:group-hover:opacity-100 md:has-[[aria-pressed=true]]:opacity-100">
             {action}
           </div>
         )}
@@ -50,8 +52,8 @@ export function NftCard({
           </span>
         )}
       </div>
-      <div className="flex flex-col gap-0.5 px-1 md:gap-1 md:px-0">
-        <h3 className="text-[0.9375rem] text-text-secondary md:text-base">
+      <div className="m-2 flex flex-col gap-2 px-1 md:gap-1 md:px-0">
+        <h3 className="text-[0.9rem] text-text-secondary md:text-base">
           <Link
             to="/nfts/$nftId"
             params={{ nftId: nft.id }}
@@ -60,11 +62,7 @@ export function NftCard({
             {nft.name}
           </Link>
         </h3>
-        <EthPrice
-          value={nft.price}
-          previousValue={nft.previousPrice}
-          className="text-base md:text-lg"
-        />
+        <EthPrice value={nft.price} previousValue={nft.previousPrice} className="text-base" />
       </div>
     </article>
   );

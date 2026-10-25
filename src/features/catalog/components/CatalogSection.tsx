@@ -72,7 +72,7 @@ export function CatalogSection({
 
       <div className="mt-6 grid gap-8 md:mt-0 md:grid-cols-[minmax(0,14rem)_1fr] lg:grid-cols-[var(--spacing-sidebar)_1fr] lg:gap-12">
         <aside aria-label="Filtros do catálogo" className="hidden flex-col gap-6 md:flex">
-          <div className="bg-card px-5 py-5">
+          <div className="rounded-2xl bg-card px-5 py-5">
             <CatalogFilters facets={facets} search={search} onSearchChange={onSearchChange} />
           </div>
           {sidebarAddon}
