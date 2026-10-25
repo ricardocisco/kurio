@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useCanGoBack, useNavigate, useRouter } from '@tanstack/react-router';
 import { ChevronLeftIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useSession } from '@/features/auth/hooks/use-session';
 import { useCart } from '@/features/cart/hooks/use-cart';
@@ -48,6 +48,7 @@ function CheckoutContent({ user, wallets }: { user: SessionUser; wallets: Wallet
   const flow = useCheckoutFlow(user.id);
   const { form, selectWallet, useOtherWallet } = useCheckoutForm(user, wallets);
   const [submittedForm, setSubmittedForm] = useState<CheckoutFormOutput | null>(null);
+  const confirmButtonRef = useRef<HTMLButtonElement>(null);
   const isBusy = flow.state.step !== 'idle';
 
   const handleConfirm = form.handleSubmit((values) => {
@@ -90,7 +91,7 @@ function CheckoutContent({ user, wallets }: { user: SessionUser; wallets: Wallet
     <section aria-labelledby="checkout-items-title" className="flex flex-col gap-4">
       <h2
         id="checkout-items-title"
-        className="flex justify-between border-b border-primary/50 pb-2 text-sm font-bold"
+        className="flex justify-between border-b border-primary/50 pb-2 text-sm font-bold lg:text-lg"
       >
         Seus NFTs <span className="font-normal text-text-secondary">Subtotal</span>
       </h2>
@@ -99,7 +100,7 @@ function CheckoutContent({ user, wallets }: { user: SessionUser; wallets: Wallet
           <CheckoutOrderLines lines={data.lines} />
           <p className="text-center text-xs text-text-secondary">
             Tem um código promocional?{' '}
-            <Link to="/cart" className="text-primary hover:underline">
+            <Link to="/cart" className="text-primary underline underline-offset-2">
               Aplique no carrinho
             </Link>
           </p>
@@ -127,7 +128,7 @@ function CheckoutContent({ user, wallets }: { user: SessionUser; wallets: Wallet
       aria-label="Pagamento"
       className="flex flex-col gap-8"
     >
-      <div className="grid items-start gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-14">
+      <div className="grid items-start gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:grid-cols-[minmax(0,1fr)_25.375rem] lg:gap-8">
         <div className="flex flex-col gap-10">
           {!isDesktop && walletSection}
           <fieldset disabled={isBusy} className="min-w-0">
@@ -138,6 +139,7 @@ function CheckoutContent({ user, wallets }: { user: SessionUser; wallets: Wallet
           {summarySection}
           {isDesktop && walletSection}
           <Button
+            ref={confirmButtonRef}
             type="submit"
             size={isDesktop ? 'md' : 'pill'}
             variant={isDesktop ? 'primary' : 'gradient'}
@@ -161,6 +163,7 @@ function CheckoutContent({ user, wallets }: { user: SessionUser; wallets: Wallet
           else void navigate({ to: '/checkout' });
         }}
         onClose={flow.reset}
+        returnFocusTo={confirmButtonRef}
       />
     </form>
   );

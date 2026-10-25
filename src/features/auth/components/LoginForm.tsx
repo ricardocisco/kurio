@@ -54,12 +54,17 @@ export function LoginForm({ onSuccess }: { onSuccess: (user: SessionUser) => voi
         <button
           type="button"
           onClick={() => showComingSoon('A recuperação de senha')}
-          className="self-end text-xs text-primary hover:underline"
+          className="self-end text-xs text-primary hover:underline lg:text-sm"
         >
           Esqueceu a senha?
         </button>
       </div>
-      <Button type="submit" size="lg" className="w-full md:h-10" disabled={loginMutation.isPending}>
+      <Button
+        type="submit"
+        size="lg"
+        className="h-14 w-full md:h-10 lg:h-11 lg:text-base"
+        disabled={loginMutation.isPending}
+      >
         {loginMutation.isPending ? 'Entrando…' : 'Entrar'}
       </Button>
     </form>

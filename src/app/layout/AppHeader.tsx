@@ -13,7 +13,7 @@ import { HeaderSearch } from './HeaderSearch';
 import { isNavigationItemActive, PRIMARY_NAVIGATION } from './navigation';
 
 const navItemClass =
-  'relative inline-flex h-header items-center px-1 text-sm text-text-secondary transition-colors hover:text-primary after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:bg-transparent';
+  'relative inline-flex h-header items-center px-1 text-sm text-text-secondary lg:text-base transition-colors hover:text-primary after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:bg-transparent';
 const navItemActiveClass = 'font-medium text-primary after:bg-primary';
 
 export function AppHeader() {
@@ -25,9 +25,9 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-40 hidden bg-background/95 backdrop-blur md:block">
       <div className="container-content flex h-header items-center justify-between border-b border-primary/50">
-        <Logo />
+        <Logo className="lg:mt-3.5" />
 
-        <nav aria-label="Principal">
+        <nav aria-label="Principal" className="lg:ml-auto">
           <ul className="flex items-center gap-6 lg:gap-10">
             {PRIMARY_NAVIGATION.map((item) => {
               const isActive = isNavigationItemActive(item, pathname);
@@ -56,10 +56,11 @@ export function AppHeader() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 lg:mt-3.5 lg:ml-[12.75rem] lg:gap-2.5">
           <HeaderSearch />
           <CartLink
             isCurrent={pathname === '/cart'}
+            iconClassName="lg:size-6"
             className="flex size-10 items-center justify-center rounded-md text-foreground transition-colors hover:bg-accent"
           />
           {isResolving ? (
@@ -67,7 +68,11 @@ export function AppHeader() {
           ) : user ? (
             <UserMenu user={user} />
           ) : (
-            <Button asChild size="sm" className="ml-2 gap-1.5">
+            <Button
+              asChild
+              size="sm"
+              className="ml-2 h-[2.125rem] gap-1.5 px-2.5 text-sm font-medium lg:ml-3 lg:text-base [&_svg:not([class*='size-'])]:size-5"
+            >
               <Link
                 to="/login"
                 search={{

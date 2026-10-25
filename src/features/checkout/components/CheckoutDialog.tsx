@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { CheckCircle2Icon, Loader2Icon, TriangleAlertIcon, WalletIcon } from 'lucide-react';
+import type { RefObject } from 'react';
 
 import type { CheckoutFormOutput, CheckoutQuote } from '@/shared/contracts/checkout';
 import { shortenAddress, WALLET_PROVIDER_LABELS } from '@/shared/contracts/wallets';
@@ -20,6 +21,7 @@ interface CheckoutDialogProps {
   onRetry: () => void;
   onRestart: () => void;
   onClose: () => void;
+  returnFocusTo?: RefObject<HTMLElement | null>;
 }
 
 const NETWORK_LABELS = { ethereum: 'Ethereum', polygon: 'Polygon', solana: 'Solana' } as const;
@@ -69,6 +71,12 @@ export function CheckoutDialog(props: CheckoutDialogProps) {
         className="max-w-lg"
         onEscapeKeyDown={(event) => isLocked && event.preventDefault()}
         onInteractOutside={(event) => isLocked && event.preventDefault()}
+        onCloseAutoFocus={(event) => {
+          const target = props.returnFocusTo?.current;
+          if (!target) return;
+          event.preventDefault();
+          target.focus();
+        }}
       >
         <DialogContentBody {...props} />
       </DialogContent>

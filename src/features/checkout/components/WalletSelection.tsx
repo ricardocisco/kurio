@@ -44,7 +44,7 @@ export function WalletSelection({
   return (
     <div className="flex flex-col gap-6">
       <fieldset className="flex flex-col gap-3" disabled={disabled}>
-        <legend className="mb-3 flex w-full items-center justify-between text-sm font-bold">
+        <legend className="mb-3 flex w-full items-center justify-between text-sm font-bold lg:text-base">
           Carteira conectada
           <Link to="/account/wallets" className="text-xs font-bold text-primary hover:underline">
             Gerenciar carteiras
@@ -93,7 +93,7 @@ export function WalletSelection({
       </fieldset>
 
       <fieldset className="flex flex-col gap-4" disabled={disabled}>
-        <legend className="mb-3 text-sm font-bold">Carteira e rede</legend>
+        <legend className="mb-3 text-sm font-bold lg:text-lg">Carteira e rede</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField label="Rede" required error={errors.network?.message}>
             {({ id, describedBy }) => (

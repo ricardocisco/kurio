@@ -10,7 +10,7 @@ interface AuthFieldProps extends Omit<ComponentProps<'input'>, 'id'> {
 }
 
 const inputClass =
-  'h-12 w-full rounded-md border border-input bg-transparent px-4 text-sm text-foreground transition-colors outline-none placeholder:text-muted-foreground/80 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30 aria-invalid:border-destructive md:h-10 md:text-xs';
+  'h-12 w-full rounded-md border border-input bg-transparent px-4 text-sm text-foreground transition-colors outline-none placeholder:text-muted-foreground/80 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30 aria-invalid:border-destructive md:h-10 md:text-xs lg:text-sm';
 
 export function AuthField({
   label,

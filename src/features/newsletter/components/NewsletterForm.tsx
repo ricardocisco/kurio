@@ -55,7 +55,7 @@ export function NewsletterForm() {
           aria-invalid={fieldError ? true : undefined}
           aria-describedby={messageId}
           className={cn(
-            'h-10 min-w-0 flex-1 rounded-l-md border border-r-0 border-input bg-muted px-3 text-sm placeholder:text-muted-foreground/80',
+            'h-10 min-w-0 flex-1 rounded-l-md border border-r-0 border-input bg-muted px-3 text-sm placeholder:text-muted-foreground/80 lg:border-transparent lg:bg-surface-band',
             'focus-visible:border-primary focus-visible:outline-none aria-invalid:border-destructive',
           )}
           {...form.register('email')}
@@ -63,12 +63,12 @@ export function NewsletterForm() {
         <button
           type="submit"
           disabled={subscription.isPending}
-          className="h-10 rounded-r-md bg-primary px-4 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary-strong disabled:opacity-60"
+          className="h-10 rounded-r-md bg-primary px-4 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary-strong disabled:opacity-60 lg:text-base"
         >
           {subscription.isPending ? 'Enviando…' : 'Enviar'}
         </button>
       </div>
-      <p id={messageId} aria-live="polite" className="min-h-4 text-xs">
+      <p id={messageId} aria-live="polite" className="text-xs empty:hidden">
         {fieldError && <span className="text-destructive">{fieldError}</span>}
         {requestError && <span className="text-destructive">{requestError}</span>}
         {subscription.isSuccess && (

@@ -42,12 +42,17 @@ export function CartLineRow({ line }: { line: CartLine }) {
 
   return (
     <tr className="bg-card align-middle">
-      <td className="py-3 pr-3 pl-3">
+      <td className="py-3 pr-3 pl-3 lg:py-0 lg:pl-0">
         <div className="flex items-center gap-4">
-          <LineThumbnail line={line} className="size-14 shrink-0 rounded-sm object-cover" />
-          <div className="flex flex-col gap-0.5 text-sm">
+          <LineThumbnail
+            line={line}
+            className="size-14 shrink-0 rounded-sm object-cover lg:size-[4.375rem] lg:rounded-none"
+          />
+          <div className="flex flex-col gap-0.5 text-sm lg:text-base">
             <LineName line={line} />
-            <span className="text-xs text-primary">ID do token: {line.tokenId}</span>
+            <span className="text-xs text-primary lg:text-sm lg:text-muted-foreground">
+              ID do token: {line.tokenId}
+            </span>
             <span className="text-xs text-muted-foreground">Edição {line.editionLabel}</span>
           </div>
         </div>
@@ -61,7 +66,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
           />
         </div>
       </td>
-      <td className="px-3 text-sm font-bold whitespace-nowrap text-primary">
+      <td className="px-3 text-sm font-bold whitespace-nowrap text-primary lg:text-base lg:text-muted-foreground">
         {formatEth(line.unitPrice)}
       </td>
       <td className="px-3">
@@ -75,7 +80,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
           limitMessage={describeLineLimit(line)}
         />
       </td>
-      <td className="px-3 text-sm font-bold whitespace-nowrap text-primary">
+      <td className="px-3 text-sm font-bold whitespace-nowrap text-primary lg:text-base">
         {formatEth(line.lineTotal)}
       </td>
       <td className="pr-3 pl-1 text-right">
@@ -86,7 +91,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
           aria-label={`Remover ${line.name} do carrinho`}
           className="flex size-8 items-center justify-center rounded-sm text-text-secondary transition-colors hover:text-destructive disabled:opacity-50"
         >
-          <Trash2Icon className="size-4" aria-hidden="true" />
+          <Trash2Icon className="size-4 lg:size-5" aria-hidden="true" />
         </button>
       </td>
     </tr>
@@ -107,7 +112,7 @@ export function CartLineCard({ line }: { line: CartLine }) {
               <LineName line={line} />
             </h3>
             <p className="text-xs text-muted-foreground">Edição: {line.editionLabel}</p>
-            <p className="text-base font-bold text-primary">{formatEth(line.lineTotal)}</p>
+            <p className="text-lg font-bold text-primary">{formatEth(line.lineTotal)}</p>
           </div>
           <div className="flex flex-col items-end gap-2">
             <QuantityStepper

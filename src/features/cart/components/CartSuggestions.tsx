@@ -24,7 +24,7 @@ export function CartSuggestions({ excludeIds }: { excludeIds: string[] }) {
     <section aria-labelledby="cart-suggestions-title" className="flex flex-col gap-6">
       <h2
         id="cart-suggestions-title"
-        className="border-b border-primary/50 pb-2 text-sm font-bold text-primary"
+        className="border-b border-primary/50 pb-2 text-sm font-bold text-primary lg:text-lg"
       >
         Colecionadores também viram
       </h2>

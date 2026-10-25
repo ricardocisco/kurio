@@ -15,7 +15,7 @@ export function EthPrice({ value, previousValue, className }: EthPriceProps) {
         {formatEth(value)}
       </span>
       {previousValue && (
-        <s className="font-normal text-muted-foreground">
+        <s className="font-normal text-muted-foreground no-underline">
           <span className="sr-only">Preço anterior: </span>
           {formatEth(previousValue)}
         </s>

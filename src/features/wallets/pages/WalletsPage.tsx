@@ -22,7 +22,7 @@ const NETWORK_LABELS = { ethereum: 'Ethereum', polygon: 'Polygon', solana: 'Sola
 function WalletSummary({ wallet }: { wallet: Wallet }) {
   return (
     <div className="flex flex-col gap-1 rounded-md bg-card px-4 py-3 text-xs">
-      <span className="text-sm font-bold">{wallet.nickname}</span>
+      <span className="text-sm font-bold lg:text-base">{wallet.nickname}</span>
       <span className="font-mono text-text-secondary">
         {wallet.ensName ?? shortenAddress(wallet.address)}
       </span>
@@ -66,7 +66,7 @@ function SecondaryWalletSection({
     <section aria-labelledby="secondary-wallet-title" className="flex flex-col gap-4">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 id="secondary-wallet-title" className="text-sm font-bold">
+          <h2 id="secondary-wallet-title" className="text-sm font-bold lg:text-base">
             Carteira secundária
           </h2>
           {!secondary && mode === 'view' && (
@@ -188,7 +188,7 @@ export function WalletsPage() {
       <h1 className="sr-only">Carteiras</h1>
       <section aria-labelledby="primary-wallet-title" className="flex flex-col gap-4">
         <header>
-          <h2 id="primary-wallet-title" className="text-sm font-bold">
+          <h2 id="primary-wallet-title" className="text-sm font-bold lg:text-base">
             Carteira principal
           </h2>
           <p className="text-xs text-muted-foreground">

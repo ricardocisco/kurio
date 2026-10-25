@@ -43,7 +43,7 @@ export function RatingStars({ average, count, variant = 'full', className }: Rat
           <StarIcon
             key={index}
             className={cn(
-              'size-3.5 text-primary',
+              'size-3.5 text-primary lg:size-4',
               index < filledStars ? 'fill-primary' : 'fill-transparent opacity-50',
             )}
           />

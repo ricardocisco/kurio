@@ -33,7 +33,7 @@ export function Slider({
         <SliderPrimitive.Thumb
           key={index}
           aria-label={thumbLabels[index]}
-          className="block size-3.5 rounded-full bg-primary shadow transition-transform outline-none hover:scale-110 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="block size-4 rounded-full border-2 border-primary-deep bg-primary shadow transition-transform outline-none hover:scale-110 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         />
       ))}
     </SliderPrimitive.Root>

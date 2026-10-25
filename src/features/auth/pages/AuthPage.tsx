@@ -22,7 +22,7 @@ export function AuthPage({ mode, search }: AuthPageProps) {
 
   if (!isDesktop) {
     return (
-      <section className="mx-auto flex w-full max-w-md flex-col gap-10 px-6 pt-16 pb-10">
+      <section className="mx-auto flex w-full max-w-md flex-col gap-16 px-6 pt-24 pb-10">
         <div className="flex justify-center">
           <Logo size="lg" />
         </div>
@@ -37,7 +37,10 @@ export function AuthPage({ mode, search }: AuthPageProps) {
         <HomePage search={BACKGROUND_SEARCH} onSearchChange={() => undefined} />
       </div>
       <Dialog open onOpenChange={(open) => !open && void navigate({ to: '/' })}>
-        <DialogContent className="top-[12%] max-w-md translate-y-0 px-10 py-8">
+        <DialogContent
+          className="top-[12%] max-w-md translate-y-0 px-10 py-8 lg:top-40 lg:max-w-[31.25rem] lg:px-20 lg:pt-10 lg:pb-20"
+          overlayClassName="lg:bg-black/30 lg:backdrop-blur-none"
+        >
           <DialogTitle className="sr-only">{AUTH_COPY[mode].title} na Kurio</DialogTitle>
           <DialogDescription className="sr-only">{AUTH_COPY[mode].description}</DialogDescription>
           <AuthPanel mode={mode} search={search} variant="dialog" />

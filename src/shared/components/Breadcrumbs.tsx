@@ -9,7 +9,10 @@ export interface BreadcrumbItem {
 
 export function Breadcrumbs({ items, className }: { items: BreadcrumbItem[]; className?: string }) {
   return (
-    <nav aria-label="Trilha de navegação" className={cn('text-xs font-medium', className)}>
+    <nav
+      aria-label="Trilha de navegação"
+      className={cn('text-xs font-medium lg:text-[0.9375rem] lg:font-bold', className)}
+    >
       <ol className="flex flex-wrap items-center gap-1">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

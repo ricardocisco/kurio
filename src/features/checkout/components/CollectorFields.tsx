@@ -14,7 +14,7 @@ export function CollectorFields({ form }: CollectorFieldsProps) {
 
   return (
     <fieldset className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
-      <legend className="mb-4 text-sm font-bold">Perfil do colecionador</legend>
+      <legend className="mb-4 text-sm font-bold lg:text-lg">Perfil do colecionador</legend>
       <FormField label="Nome de exibição" required error={errors.displayName?.message}>
         {({ id, describedBy, invalid }) => (
           <input

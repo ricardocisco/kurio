@@ -56,7 +56,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
       aria-labelledby="profile-title"
       className="flex flex-col gap-5"
     >
-      <h2 id="profile-title" className="text-sm font-bold">
+      <h2 id="profile-title" className="text-sm font-bold lg:text-base">
         Perfil do colecionador
       </h2>
       {formError && (

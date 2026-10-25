@@ -77,7 +77,7 @@ export function RegisterForm({ onSuccess }: { onSuccess: (user: SessionUser) => 
       <Button
         type="submit"
         size="lg"
-        className="w-full md:h-10"
+        className="h-14 w-full md:h-10 lg:h-11 lg:text-base"
         disabled={registerMutation.isPending}
       >
         {registerMutation.isPending ? 'Criando conta…' : 'Criar conta'}

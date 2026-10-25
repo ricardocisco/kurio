@@ -11,7 +11,7 @@ interface QuantityStepperProps {
   label: string;
   limitMessage?: string;
   disabled?: boolean;
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
@@ -32,7 +32,7 @@ export function QuantityStepper({
   const buttonClass = cn(
     'flex items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary-strong',
     'disabled:cursor-not-allowed disabled:bg-primary/30 disabled:text-primary-foreground/60',
-    size === 'md' ? 'size-7' : 'size-6',
+    size === 'lg' ? 'h-11 w-8 lg:h-[2.875rem]' : size === 'md' ? 'size-7' : 'size-6',
   );
 
   return (
@@ -41,7 +41,7 @@ export function QuantityStepper({
         role="group"
         aria-label={label}
         aria-describedby={limitMessage ? messageId : undefined}
-        className="flex items-center gap-3"
+        className={cn('flex items-center', size === 'sm' ? 'gap-2' : 'gap-3')}
       >
         <button
           type="button"
@@ -54,7 +54,10 @@ export function QuantityStepper({
         </button>
         <output
           aria-live="polite"
-          className="min-w-6 text-center text-base font-medium tabular-nums"
+          className={cn(
+            'min-w-6 text-center text-base font-medium tabular-nums',
+            size === 'lg' && 'text-lg',
+          )}
         >
           {value}
         </output>

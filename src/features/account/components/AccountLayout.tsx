@@ -35,7 +35,7 @@ const NAV_ITEMS: AccountNavItem[] = [
 ];
 
 const itemClass =
-  'flex w-full shrink-0 items-center gap-3 border-l-4 border-transparent px-4 py-2.5 text-left text-xs text-primary transition-colors hover:bg-accent md:px-3';
+  'flex w-full shrink-0 items-center gap-3 border-l-4 border-transparent px-4 py-2.5 text-left text-xs text-primary transition-colors hover:bg-accent md:px-3 lg:py-3 lg:text-base';
 
 export function AccountLayout() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
@@ -53,7 +53,7 @@ export function AccountLayout() {
     });
 
   return (
-    <div className="container-content grid grid-cols-1 gap-6 py-6 md:grid-cols-[14rem_minmax(0,1fr)] md:gap-6 lg:grid-cols-[var(--spacing-sidebar)_minmax(0,1fr)] lg:gap-6">
+    <div className="container-content grid grid-cols-1 gap-6 py-6 md:grid-cols-[14rem_minmax(0,1fr)] md:gap-6 lg:grid-cols-[var(--spacing-sidebar)_minmax(0,1fr)] lg:gap-7">
       <aside className="flex flex-col gap-4">
         {user && (
           <div className="flex items-center gap-3 rounded-sm bg-card px-4 py-3">
@@ -67,7 +67,7 @@ export function AccountLayout() {
           </div>
         )}
         <nav aria-label="Minha conta" className="bg-card py-3">
-          <h2 className="px-4 pb-2 text-base font-bold md:px-3">Meu perfil</h2>
+          <h2 className="px-4 pb-2 text-base font-bold md:px-3 lg:text-lg">Meu perfil</h2>
           <ul className="flex gap-1 overflow-x-auto md:flex-col md:gap-0 md:overflow-visible">
             {NAV_ITEMS.map(({ label, icon: Icon, to }) => {
               const isActive = to === pathname;
@@ -79,7 +79,7 @@ export function AccountLayout() {
                       aria-current={isActive ? 'page' : undefined}
                       className={cn(itemClass, isActive && 'border-primary bg-accent/50 font-bold')}
                     >
-                      <Icon className="size-4" aria-hidden="true" />
+                      <Icon className="size-4 lg:size-5" aria-hidden="true" />
                       {label}
                     </Link>
                   ) : (
@@ -88,7 +88,7 @@ export function AccountLayout() {
                       className={itemClass}
                       onClick={() => showComingSoon(label)}
                     >
-                      <Icon className="size-4" aria-hidden="true" />
+                      <Icon className="size-4 lg:size-5" aria-hidden="true" />
                       {label}
                     </button>
                   )}
@@ -102,7 +102,7 @@ export function AccountLayout() {
                 onClick={handleLogout}
                 disabled={logoutMutation.isPending}
               >
-                <LogOutIcon className="size-4" aria-hidden="true" />
+                <LogOutIcon className="size-4 lg:size-5" aria-hidden="true" />
                 Sair
               </button>
             </li>

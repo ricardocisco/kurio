@@ -28,6 +28,7 @@
     "check": "npm run typecheck && npm run lint && npm run format:check"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^9.39.5",
     "@lhci/cli": "^0.15.1",
     "@mswjs/socket.io-binding": "^0.2.0",

@@ -99,12 +99,12 @@ export function CartPage() {
     }
 
     return (
-      <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,1fr)_20rem] lg:gap-12">
+      <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,1fr)_20rem] lg:grid-cols-[minmax(0,1fr)_20.75rem] lg:gap-20">
         {isDesktop ? (
-          <table className="w-full border-separate border-spacing-y-2">
+          <table className="w-full border-separate border-spacing-y-2 lg:border-spacing-y-3">
             <caption className="sr-only">Itens do carrinho</caption>
             <thead>
-              <tr className="text-left text-sm">
+              <tr className="text-left text-sm lg:text-base [&>th]:border-b [&>th]:border-primary/30 lg:[&>th]:font-medium">
                 <th scope="col" className="pb-1 pl-0 font-bold">
                   NFTs
                 </th>

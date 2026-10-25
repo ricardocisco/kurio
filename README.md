@@ -7,7 +7,7 @@ React + TypeScript com TanStack Router/Query, Axios, Socket.IO, Tailwind CSS, sh
 - Arquitetura, contratos e decisões: [`ARCHITECTURE.md`](ARCHITECTURE.md)
 - Cenários e controle dos mocks: [`docs/MOCKS.md`](docs/MOCKS.md)
 
-> Status: **todas as telas do escopo implementadas, com tempo real via Socket.IO** (118 testes E2E). Próximas fases: polimento visual, performance e documentação final. Demo: https://kurio-six.vercel.app
+> Status: **todas as telas do escopo implementadas, com tempo real via Socket.IO, polimento visual e auditoria de acessibilidade**. Próxima fase: performance e documentação final. Demo: https://kurio-six.vercel.app
 
 ## Requisitos
 
@@ -35,22 +35,22 @@ Na primeira execução do Playwright, instale o navegador: `npx playwright insta
 
 ## Comandos
 
-| Comando                                   | O que faz                                                       |
-| ----------------------------------------- | --------------------------------------------------------------- |
-| `npm run dev`                             | Desenvolvimento com mocks                                       |
-| `npm run dev:no-mocks`                    | Desenvolvimento sem MSW (requer uma API real)                   |
-| `npm run build`                           | Verificação de tipos + build otimizado                          |
-| `npm run preview`                         | Serve o build em `http://localhost:4173`                        |
-| `npm run typecheck`                       | Verificação de tipos                                            |
-| `npm run lint` / `npm run lint:fix`       | ESLint (type-checked, React Hooks, a11y, fronteira app ↔ mocks) |
-| `npm run format` / `npm run format:check` | Prettier                                                        |
-| `npm run check`                           | typecheck + lint + format                                       |
-| `npm run test:e2e`                        | Playwright (desktop e mobile, Chromium) sobre o build com mocks |
-| `npm run test:e2e:ui`                     | Playwright em modo UI                                           |
-| `npm run test:e2e:update`                 | Atualiza as baselines de regressão visual                       |
-| `npm run test:e2e:deployed`               | Roda os mesmos testes contra a URL publicada (sem build local)  |
-| `npm run test:e2e:report`                 | Abre o relatório HTML                                           |
-| `npm run lighthouse`                      | Build + Lighthouse CI (desktop e mobile, 3 execuções cada)      |
+| Comando                                   | O que faz                                                                                                                                                    |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm run dev`                             | Desenvolvimento com mocks                                                                                                                                    |
+| `npm run dev:no-mocks`                    | Desenvolvimento sem MSW (requer uma API real)                                                                                                                |
+| `npm run build`                           | Verificação de tipos + build otimizado                                                                                                                       |
+| `npm run preview`                         | Serve o build em `http://localhost:4173`                                                                                                                     |
+| `npm run typecheck`                       | Verificação de tipos                                                                                                                                         |
+| `npm run lint` / `npm run lint:fix`       | ESLint (type-checked, React Hooks, a11y, fronteira app ↔ mocks)                                                                                              |
+| `npm run format` / `npm run format:check` | Prettier                                                                                                                                                     |
+| `npm run check`                           | typecheck + lint + format                                                                                                                                    |
+| `npm run test:e2e`                        | Playwright (desktop e mobile, Chromium) sobre o build com mocks                                                                                              |
+| `npm run test:e2e:ui`                     | Playwright em modo UI                                                                                                                                        |
+| `npm run test:e2e:update`                 | Atualiza as baselines de regressão visual (as do repositório são de Linux; em outro sistema os testes visuais são pulados, a menos que `VISUAL_BASELINES=1`) |
+| `npm run test:e2e:deployed`               | Roda os mesmos testes contra a URL publicada (sem build local)                                                                                               |
+| `npm run test:e2e:report`                 | Abre o relatório HTML                                                                                                                                        |
+| `npm run lighthouse`                      | Build + Lighthouse CI (desktop e mobile, 3 execuções cada)                                                                                                   |
 
 ## Cenários dos mocks
 

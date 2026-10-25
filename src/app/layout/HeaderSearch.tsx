@@ -33,7 +33,7 @@ export function HeaderSearch() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="text-foreground" aria-label="Buscar NFTs">
-          <SearchIcon className="size-5" aria-hidden="true" />
+          <SearchIcon className="size-5 lg:size-6" aria-hidden="true" />
         </Button>
       </DialogTrigger>
       <DialogContent className="top-24 translate-y-0 sm:max-w-xl">

@@ -71,7 +71,10 @@ export function CouponForm({ coupon, variant, disabled = false }: CouponFormProp
       className="flex flex-col gap-1.5"
       aria-label="Cupom de desconto"
     >
-      <label htmlFor={inputId} className={cn('text-xs font-bold', variant === 'pill' && 'sr-only')}>
+      <label
+        htmlFor={inputId}
+        className={cn('text-xs font-bold lg:text-sm', variant === 'pill' && 'sr-only')}
+      >
         Código promocional
       </label>
       <div className={cn('flex', variant === 'pill' && 'rounded-full bg-background p-1')}>
@@ -86,7 +89,7 @@ export function CouponForm({ coupon, variant, disabled = false }: CouponFormProp
           className={cn(
             'h-9 min-w-0 flex-1 bg-transparent px-3 text-xs text-foreground placeholder:text-muted-foreground/80 focus-visible:outline-none aria-invalid:text-destructive',
             variant === 'panel' &&
-              'rounded-l-md border border-r-0 border-input focus-visible:border-primary',
+              'rounded-l-md border border-r-0 border-input focus-visible:border-primary lg:h-10 lg:border-primary/70',
             variant === 'pill' && 'h-11 px-4',
           )}
           {...form.register('code')}
@@ -96,7 +99,7 @@ export function CouponForm({ coupon, variant, disabled = false }: CouponFormProp
           disabled={disabled || apply.isPending}
           className={cn(
             'bg-primary px-4 text-xs font-bold text-primary-foreground transition-colors hover:bg-primary-strong disabled:opacity-60',
-            variant === 'panel' && 'h-9 rounded-r-md',
+            variant === 'panel' && 'h-9 rounded-r-md lg:h-10 lg:px-5 lg:text-base',
             variant === 'pill' && 'h-11 rounded-full bg-primary-gradient px-5 text-sm',
           )}
         >

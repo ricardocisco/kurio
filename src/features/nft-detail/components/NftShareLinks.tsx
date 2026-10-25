@@ -28,7 +28,7 @@ export function NftShareLinks({ nftName, url }: NftShareLinksProps) {
   ];
 
   return (
-    <div className="flex items-center gap-2 text-xs font-bold">
+    <div className="flex items-center gap-2 text-xs font-bold lg:text-[0.9375rem]">
       <span>Compartilhar este NFT:</span>
       <ul className="flex items-center gap-1">
         {links.map(({ label, href, Icon }) => (

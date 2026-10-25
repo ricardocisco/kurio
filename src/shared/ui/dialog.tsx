@@ -29,6 +29,7 @@ export function DialogOverlay({
 interface DialogContentProps extends React.ComponentProps<typeof DialogPrimitive.Content> {
   showCloseButton?: boolean;
   withAccentBar?: boolean;
+  overlayClassName?: string;
 }
 
 export function DialogContent({
@@ -36,11 +37,12 @@ export function DialogContent({
   children,
   showCloseButton = true,
   withAccentBar = true,
+  overlayClassName,
   ...props
 }: DialogContentProps) {
   return (
     <DialogPortal>
-      <DialogOverlay />
+      <DialogOverlay className={overlayClassName} />
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(

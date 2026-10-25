@@ -25,7 +25,7 @@ export function FilterOptionList<TId extends string>({
 }: FilterOptionListProps<TId>) {
   return (
     <fieldset className="flex flex-col gap-2">
-      <legend className="mb-2 text-sm font-bold text-foreground">{title}</legend>
+      <legend className="mb-2 text-sm font-bold text-foreground lg:text-lg">{title}</legend>
       <ul className="flex flex-col gap-0.5">
         {options.map((option) => {
           const isSelected = selected.includes(option.id);
@@ -36,21 +36,27 @@ export function FilterOptionList<TId extends string>({
                 aria-pressed={isSelected}
                 onClick={() => onToggle(option.id)}
                 className={cn(
-                  'flex w-full items-center justify-between gap-2 rounded-sm px-1.5 py-1.5 text-left text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
+                  'relative flex w-full items-center justify-between gap-2 rounded-sm px-3 py-1.5 text-left text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground lg:py-[0.5625rem] lg:text-[0.9375rem]',
                   isSelected && 'bg-accent/60 text-primary',
                 )}
               >
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center">
                   <CheckIcon
                     aria-hidden="true"
                     className={cn(
-                      'size-3 transition-opacity',
+                      'absolute left-0 size-3 transition-opacity',
                       isSelected ? 'opacity-100' : 'opacity-0',
                     )}
                   />
                   {option.label}
                 </span>
-                <span className={cn('tabular-nums', emphasizeCounts && 'font-bold')}>
+                <span
+                  className={cn(
+                    'tabular-nums',
+                    emphasizeCounts && 'font-bold text-text-secondary',
+                    emphasizeCounts && isSelected && 'text-primary',
+                  )}
+                >
                   <span className="sr-only">, </span>({option.count})
                   <span className="sr-only"> itens</span>
                 </span>

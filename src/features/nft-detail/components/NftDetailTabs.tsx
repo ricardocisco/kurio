@@ -13,7 +13,7 @@ export function NftDetailTabs({ nft }: { nft: NftDetail }) {
 
       <TabsContent
         value="details"
-        className="flex flex-col gap-4 text-xs leading-relaxed text-muted-foreground"
+        className="flex flex-col gap-4 text-xs leading-relaxed text-muted-foreground lg:text-sm lg:leading-6"
       >
         {nft.story.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>

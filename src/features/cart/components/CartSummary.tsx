@@ -26,11 +26,22 @@ function SummaryRow({
   emphasis?: boolean;
 }) {
   return (
-    <div className={cn('flex items-start justify-between gap-4 text-sm', emphasis && 'font-bold')}>
+    <div
+      className={cn(
+        'flex items-start justify-between gap-4 text-sm lg:text-[0.9375rem]',
+        emphasis && 'font-bold lg:text-base',
+      )}
+    >
       <dt>{label}</dt>
       <dd className="flex flex-col items-end">
-        <span className={cn('tabular-nums', emphasis && 'text-base text-primary')}>{value}</span>
-        {hint && <span className="text-[0.6875rem] font-normal text-primary">{hint}</span>}
+        <span
+          className={cn('tabular-nums lg:text-lg', emphasis && 'text-base text-primary lg:text-lg')}
+        >
+          {value}
+        </span>
+        {hint && (
+          <span className="text-[0.6875rem] font-normal text-primary lg:text-xs">{hint}</span>
+        )}
       </dd>
     </div>
   );
@@ -57,7 +68,7 @@ export function CartSummary({ cart, variant, isUpdating }: CartSummaryProps) {
       <h2
         id="cart-summary-title"
         className={cn(
-          'border-b border-primary/50 pb-2 text-sm font-bold',
+          'border-b border-primary/50 pb-2 text-sm font-bold lg:text-lg lg:font-medium',
           variant === 'sheet' && 'sr-only',
         )}
       >
@@ -93,6 +104,7 @@ export function CartSummary({ cart, variant, isUpdating }: CartSummaryProps) {
         <Button
           variant={variant === 'sheet' ? 'gradient' : 'primary'}
           size={variant === 'sheet' ? 'pill' : 'md'}
+          className={variant === 'panel' ? 'lg:text-[0.9375rem]' : undefined}
           disabled
         >
           Conectar e finalizar
@@ -102,12 +114,16 @@ export function CartSummary({ cart, variant, isUpdating }: CartSummaryProps) {
           asChild
           variant={variant === 'sheet' ? 'gradient' : 'primary'}
           size={variant === 'sheet' ? 'pill' : 'md'}
+          className={variant === 'panel' ? 'lg:text-[0.9375rem]' : undefined}
         >
           <Link to="/checkout">Conectar e finalizar</Link>
         </Button>
       )}
       {variant === 'panel' && (
-        <Link to="/marketplace" className="text-center text-xs text-primary hover:underline">
+        <Link
+          to="/marketplace"
+          className="text-center text-xs text-primary hover:underline lg:text-base"
+        >
           Continuar explorando
         </Link>
       )}

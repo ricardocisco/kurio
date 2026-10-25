@@ -31,12 +31,14 @@ export function UserMenu({ user }: { user: SessionUser }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        className="ml-2 flex items-center gap-2 rounded-full py-1 pr-3 pl-1 text-xs text-foreground transition-colors hover:bg-accent data-[state=open]:bg-accent"
-        aria-label={`Menu da conta de ${user.displayName}`}
-      >
-        <UserAvatar user={user} className="size-7" />
-        <span className="max-w-32 truncate">{user.displayName}</span>
+      <DropdownMenuTrigger className="ml-2 flex items-center gap-2 rounded-full py-1 pr-3 pl-1 text-xs text-foreground transition-colors hover:bg-accent data-[state=open]:bg-accent">
+        <span aria-hidden="true">
+          <UserAvatar user={user} className="size-7" />
+        </span>
+        <span className="max-w-32 truncate">
+          <span className="sr-only">Menu da conta de </span>
+          {user.displayName}
+        </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>{user.email}</DropdownMenuLabel>

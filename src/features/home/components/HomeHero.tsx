@@ -26,7 +26,7 @@ function SlideDots({ slides, activeIndex, onSelect, className }: SlideDotsProps)
           onClick={() => onSelect(index)}
           aria-label={`Mostrar destaque ${index + 1}: ${slide.name}`}
           aria-pressed={index === activeIndex}
-          className="group flex size-6 items-center justify-center rounded-full"
+          className="group flex size-6 items-center justify-center rounded-full md:size-6"
         >
           <span
             aria-hidden="true"
@@ -54,23 +54,27 @@ export function DesktopHomeHero() {
   return (
     <section
       aria-labelledby="hero-title-desktop"
-      className="container-content hidden grid-cols-[1fr_minmax(0,28rem)] items-center gap-10 py-8 md:grid lg:py-10"
+      className="container-content hidden grid-cols-[1fr_minmax(0,28rem)] items-center gap-10 py-8 md:grid lg:pt-8 lg:pb-9"
     >
       <div className="flex flex-col gap-4 lg:pl-10">
-        <p className="text-xs text-foreground">Bem-vindo à Kurio</p>
+        <p className="text-sm text-foreground lg:text-base">Bem-vindo à Kurio</p>
         <h1
           id="hero-title-desktop"
-          className="text-3xl leading-[1.75] font-bold tracking-tight text-foreground uppercase lg:text-[2.5rem] lg:leading-[1.75]"
+          className="text-3xl leading-[1.75] font-bold tracking-tight text-foreground uppercase lg:-mt-3 lg:-mb-3 lg:text-[2.25rem] lg:leading-[1.6] xl:text-[2.75rem]"
         >
           Seja dono do futuro
           <br />
           da arte digital
         </h1>
-        <p className="max-w-md text-xs leading-relaxed text-muted-foreground">
+        <p className="max-w-[35rem] text-xs leading-relaxed text-muted-foreground lg:text-sm lg:leading-6">
           Descubra NFTs selecionados de criadores emergentes e consagrados. Colecione arte digital
           rara, apoie artistas e tenha uma parte da cultura da internet.
         </p>
-        <Button asChild size="md" className="mt-4 w-fit px-7 text-xs uppercase">
+        <Button
+          asChild
+          size="md"
+          className="mt-4 w-fit px-7 text-sm uppercase lg:px-8 lg:text-base"
+        >
           <a href="#catalogo">Explorar</a>
         </Button>
         {slides.length > 1 && (
@@ -95,16 +99,17 @@ export function DesktopHomeHero() {
 
 export function MobileHomeHero() {
   const { slides, activeIndex, setActiveIndex, activeSlide } = useHeroSlides();
+  const companionSlide = slides.length > 1 ? slides[(activeIndex + 1) % slides.length] : undefined;
 
   return (
     <section
       aria-labelledby="hero-title-mobile"
-      className="relative overflow-hidden rounded-2xl bg-[radial-gradient(circle_at_30%_60%,var(--kurio-copper-deep)_0%,var(--kurio-700)_45%,var(--kurio-850)_100%)] p-4 md:hidden"
+      className="relative overflow-hidden rounded-2xl bg-[radial-gradient(circle_at_30%_60%,var(--kurio-copper-deep)_0%,var(--kurio-700)_45%,var(--kurio-850)_100%)] px-4 pt-3 pb-1 md:hidden"
     >
       <div className="relative z-10 flex items-center gap-3">
-        <div className="flex flex-1 flex-col gap-2">
+        <div className="flex flex-1 flex-col gap-1.5">
           <p className="text-xs text-foreground">Bem-vindo à Kurio</p>
-          <h1 id="hero-title-mobile" className="text-lg leading-snug font-bold uppercase">
+          <h1 id="hero-title-mobile" className="text-base leading-normal font-bold uppercase">
             Seja dono da cultura digital
           </h1>
           <p className="text-xs leading-relaxed text-text-secondary">
@@ -124,6 +129,13 @@ export function MobileHomeHero() {
           ) : (
             <Skeleton className="aspect-square w-full rounded-xl" />
           )}
+          {companionSlide && (
+            <NftImage
+              image={{ ...companionSlide.image, alt: '' }}
+              sizes="20vw"
+              className="absolute -bottom-2 -left-3 w-[42%] rounded-lg border-2 border-card"
+            />
+          )}
         </div>
       </div>
       {slides.length > 1 && (
@@ -131,7 +143,7 @@ export function MobileHomeHero() {
           slides={slides}
           activeIndex={activeIndex}
           onSelect={setActiveIndex}
-          className="relative z-10 mt-3 justify-center"
+          className="relative z-10 justify-center"
         />
       )}
     </section>

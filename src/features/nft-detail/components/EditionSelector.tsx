@@ -17,7 +17,9 @@ export function EditionSelector({ editions, selectedId, onSelect }: EditionSelec
 
   return (
     <fieldset className="flex flex-col gap-2">
-      <legend className="mb-2 text-sm font-bold text-foreground">Edição:</legend>
+      <legend className="mb-2 text-sm font-bold text-foreground lg:text-[0.9375rem]">
+        Edição:
+      </legend>
       <div className="flex flex-wrap gap-2">
         {editions.map((edition) => {
           const isAvailable = isEditionAvailable(edition);
@@ -37,7 +39,7 @@ export function EditionSelector({ editions, selectedId, onSelect }: EditionSelec
               <label
                 htmlFor={inputId}
                 className={cn(
-                  'inline-flex cursor-pointer items-center rounded-full border border-border px-2.5 py-1 text-xs text-text-secondary transition-colors hover:border-primary/70',
+                  'inline-flex cursor-pointer items-center rounded-full border border-border px-2.5 py-1 text-xs text-text-secondary transition-colors hover:border-primary/70 lg:text-sm',
                   'peer-checked:border-primary peer-checked:text-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring',
                   !isAvailable && 'cursor-not-allowed line-through opacity-50 hover:border-border',
                 )}

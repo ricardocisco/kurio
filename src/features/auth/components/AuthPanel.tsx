@@ -46,11 +46,11 @@ export function AuthPanel({ mode, search, variant }: AuthPanelProps) {
     cn('transition-colors hover:text-primary', isActive ? 'text-primary' : 'text-foreground');
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 lg:gap-6">
       {variant === 'dialog' ? (
         <nav
           aria-label="Acesso à conta"
-          className="flex items-center justify-center gap-2 text-base"
+          className="flex items-center justify-center gap-2 text-base lg:text-xl"
         >
           <Link
             to="/login"
@@ -76,7 +76,12 @@ export function AuthPanel({ mode, search, variant }: AuthPanelProps) {
         <h1 className="text-center text-lg font-bold">{copy.pageTitle}</h1>
       )}
 
-      <p className={cn('text-center text-xs text-text-secondary', variant === 'page' && 'sr-only')}>
+      <p
+        className={cn(
+          'text-center text-xs text-text-secondary lg:text-[0.8125rem] lg:text-foreground',
+          variant === 'page' && 'sr-only',
+        )}
+      >
         {copy.description}
       </p>
 

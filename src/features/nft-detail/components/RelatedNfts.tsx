@@ -23,7 +23,7 @@ export function RelatedNfts({
     <section aria-labelledby="related-title" className="flex flex-col gap-6">
       <h2
         id="related-title"
-        className="w-full border-b border-primary/50 pb-2 text-sm font-bold text-primary md:w-5/6"
+        className="w-full border-b border-primary/50 pb-2 text-sm font-bold text-primary md:w-5/6 lg:text-lg"
       >
         {title}
       </h2>

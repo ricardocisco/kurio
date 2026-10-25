@@ -13,7 +13,7 @@ export function Logo({ className, size = 'sm' }: LogoProps) {
       to="/"
       className={cn(
         'font-bold tracking-[0.2em] text-foreground uppercase transition-colors hover:text-primary',
-        size === 'sm' ? 'text-xs' : 'text-3xl',
+        size === 'sm' ? 'text-sm tracking-[0.12em]' : 'text-3xl',
         className,
       )}
       aria-label="Kurio, página inicial"

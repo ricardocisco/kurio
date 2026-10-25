@@ -26,8 +26,8 @@ export function NftCard({
   className,
 }: NftCardProps) {
   return (
-    <article className={cn('group relative flex flex-col gap-2', className)}>
-      <div className="relative overflow-hidden rounded-xl bg-card p-2 md:rounded-sm md:p-3">
+    <article className={cn('group relative flex flex-col gap-2 md:gap-3.5', className)}>
+      <div className="relative overflow-hidden rounded-2xl bg-card p-1 md:rounded-sm md:px-1 md:py-6">
         <NftImage
           image={nft.image}
           sizes={imageSizes}
@@ -50,8 +50,8 @@ export function NftCard({
           </span>
         )}
       </div>
-      <div className="flex flex-col gap-0.5 px-1">
-        <h3 className="text-sm text-text-secondary">
+      <div className="flex flex-col gap-0.5 px-1 md:gap-1 md:px-0">
+        <h3 className="text-[0.9375rem] text-text-secondary md:text-base">
           <Link
             to="/nfts/$nftId"
             params={{ nftId: nft.id }}
@@ -60,7 +60,11 @@ export function NftCard({
             {nft.name}
           </Link>
         </h3>
-        <EthPrice value={nft.price} previousValue={nft.previousPrice} className="text-sm" />
+        <EthPrice
+          value={nft.price}
+          previousValue={nft.previousPrice}
+          className="text-base md:text-lg"
+        />
       </div>
     </article>
   );
@@ -69,7 +73,7 @@ export function NftCard({
 export function NftCardSkeleton({ className }: { className?: string }) {
   return (
     <div className={cn('flex flex-col gap-2', className)} aria-hidden="true">
-      <div className="rounded-xl bg-card p-2 md:rounded-sm md:p-3">
+      <div className="rounded-xl bg-card p-2 md:rounded-sm md:px-1 md:py-6">
         <Skeleton className="aspect-square w-full rounded-xl" />
       </div>
       <div className="flex flex-col gap-1.5 px-1">

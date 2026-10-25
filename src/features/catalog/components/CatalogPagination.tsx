@@ -18,13 +18,13 @@ function visiblePages(page: number, totalPages: number): number[] {
 }
 
 const itemClass =
-  'flex size-7 items-center justify-center rounded-sm border border-border text-xs text-foreground transition-colors hover:border-primary hover:text-primary';
+  'flex size-7 items-center justify-center rounded-sm border border-border text-xs text-foreground lg:size-9 lg:text-lg transition-colors hover:border-primary hover:text-primary';
 
 export function CatalogPagination({ page, totalPages, onPageChange }: CatalogPaginationProps) {
   if (totalPages <= 1) return null;
 
   return (
-    <nav aria-label="Paginação do catálogo" className="flex justify-end">
+    <nav aria-label="Paginação do catálogo" className="flex justify-end lg:mt-8">
       <ul className="flex items-center gap-2">
         {page > 1 && (
           <li>

@@ -20,7 +20,7 @@ export function CatalogToolbar({ search, onSearchChange }: CatalogToolbarProps) 
       <div
         role="group"
         aria-label="Filtrar listagem"
-        className="-mx-1 flex gap-4 overflow-x-auto px-1"
+        className="-mx-1 flex gap-4 overflow-x-auto px-1 lg:gap-5"
       >
         {catalogTabSchema.options.map((tab) => {
           const isActive = search.tab === tab;
@@ -31,7 +31,7 @@ export function CatalogToolbar({ search, onSearchChange }: CatalogToolbarProps) 
               aria-pressed={isActive}
               onClick={() => onSearchChange({ tab })}
               className={cn(
-                'shrink-0 border-b-2 border-transparent py-1 text-sm whitespace-nowrap text-foreground transition-colors hover:text-primary',
+                'shrink-0 border-b-2 border-transparent py-1 text-sm whitespace-nowrap text-foreground transition-colors hover:text-primary lg:text-[0.9375rem]',
                 isActive && 'border-primary font-medium text-primary',
               )}
             >
@@ -41,7 +41,7 @@ export function CatalogToolbar({ search, onSearchChange }: CatalogToolbarProps) 
         })}
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-text-secondary">
+      <div className="flex items-center gap-1 text-xs text-text-secondary lg:text-[0.9375rem]">
         <span id="catalog-sort-label">Ordenar por:</span>
         <Select
           value={search.sort}
@@ -49,7 +49,7 @@ export function CatalogToolbar({ search, onSearchChange }: CatalogToolbarProps) 
         >
           <SelectTrigger
             aria-labelledby="catalog-sort-label"
-            className="h-8 w-auto gap-1 border-none bg-transparent px-1 text-xs text-text-secondary"
+            className="h-8 w-auto gap-1 border-none bg-transparent px-1 text-xs text-text-secondary lg:text-[0.9375rem]"
           >
             <SelectValue />
           </SelectTrigger>

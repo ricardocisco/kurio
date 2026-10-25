@@ -35,7 +35,7 @@ export function PriceRangeFilter({ range, minPrice, maxPrice, onApply }: PriceRa
 
   return (
     <div role="group" aria-labelledby={labelId} className="flex flex-col gap-3">
-      <h3 id={labelId} className="text-sm font-bold text-foreground">
+      <h3 id={labelId} className="text-sm font-bold text-foreground lg:text-lg">
         Faixa de preço
       </h3>
       <Slider
@@ -48,10 +48,10 @@ export function PriceRangeFilter({ range, minPrice, maxPrice, onApply }: PriceRa
         thumbLabels={['Preço mínimo em ETH', 'Preço máximo em ETH']}
         className="py-2"
       />
-      <p className="text-xs text-text-secondary" aria-live="polite">
+      <p className="text-xs text-text-secondary lg:text-[0.9375rem]" aria-live="polite">
         Preço: {priceFormatter.format(draft[0])} - {priceFormatter.format(draft[1])} ETH
       </p>
-      <Button size="sm" className="w-fit" onClick={handleApply}>
+      <Button size="sm" className="w-fit lg:h-9 lg:px-3 lg:text-[0.9375rem]" onClick={handleApply}>
         Aplicar
       </Button>
     </div>

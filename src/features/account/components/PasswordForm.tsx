@@ -49,7 +49,7 @@ export function PasswordForm() {
       aria-labelledby="password-title"
       className="flex max-w-md flex-col gap-5"
     >
-      <h2 id="password-title" className="text-sm font-bold">
+      <h2 id="password-title" className="text-sm font-bold lg:text-base">
         Alterar senha
       </h2>
       {formError && (

@@ -20,7 +20,7 @@ interface CatalogResultsProps {
 }
 
 const gridClass =
-  'grid grid-cols-2 items-start gap-x-4 gap-y-6 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:gap-x-6 [&>*:nth-child(even)]:mt-8 md:[&>*:nth-child(even)]:mt-0';
+  'grid grid-cols-2 items-start gap-x-4 gap-y-6 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:gap-x-8 lg:gap-y-14 [&>*:nth-child(even)]:mt-8 md:[&>*:nth-child(even)]:mt-0';
 
 export function CatalogResults({
   data,

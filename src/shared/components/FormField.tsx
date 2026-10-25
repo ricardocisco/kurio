@@ -20,14 +20,17 @@ export function FormField({ label, required, error, hint, className, children }:
 
   return (
     <div className={cn('flex flex-col gap-1.5', className)}>
-      <label htmlFor={id} className="text-xs font-medium text-foreground">
+      <label
+        htmlFor={id}
+        className="text-xs font-medium text-foreground lg:text-base lg:font-normal"
+      >
         {label}
         {required && (
           <span className="ml-0.5 text-primary" aria-hidden="true">
             *
           </span>
         )}
-        {!required && <span className="ml-1 text-muted-foreground">(opcional)</span>}
+        {!required && <span className="ml-1 text-muted-foreground lg:text-sm">(opcional)</span>}
       </label>
       {children({ id, describedBy, invalid: Boolean(error) })}
       {hint && !error && (
@@ -45,4 +48,4 @@ export function FormField({ label, required, error, hint, className, children }:
 }
 
 export const fieldInputClass =
-  'h-10 w-full rounded-md border border-input bg-transparent px-3 text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground/80 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30 aria-invalid:border-destructive read-only:cursor-default read-only:text-text-secondary';
+  'h-10 w-full rounded-md border border-input bg-transparent px-3 text-xs text-foreground lg:text-sm outline-none transition-colors placeholder:text-muted-foreground/80 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30 aria-invalid:border-destructive read-only:cursor-default read-only:text-text-secondary';

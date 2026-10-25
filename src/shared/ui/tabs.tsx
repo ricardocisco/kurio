@@ -26,7 +26,7 @@ export function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        '-mb-px shrink-0 border-b-2 border-transparent py-2 text-sm whitespace-nowrap text-foreground transition-colors outline-none hover:text-primary',
+        '-mb-px shrink-0 border-b-2 border-transparent py-2 text-sm whitespace-nowrap text-foreground transition-colors outline-none hover:text-primary lg:text-lg',
         'focus-visible:ring-2 focus-visible:ring-ring',
         'data-[state=active]:border-primary data-[state=active]:font-medium data-[state=active]:text-primary',
         className,
