@@ -24,6 +24,12 @@ export interface FaultRule {
 
 export interface ScenarioFlags {
   emptyCatalog?: boolean;
+  priceChangeAtCheckout?: boolean;
+  soldOutAtCheckout?: boolean;
+  paymentDeclined?: boolean;
+  orderTimeout?: boolean;
+  walletRejected?: boolean;
+  walletDisconnects?: boolean;
 }
 
 export interface ScenarioDefinition {
@@ -102,6 +108,38 @@ export const SCENARIOS = {
         effect: { type: 'http', status: 503, code: 'SERVICE_UNAVAILABLE' },
       },
     ],
+  },
+  'price-change-at-checkout': {
+    description:
+      'O preço do primeiro item sobe 0.10 ETH no momento do envio do pedido (exige nova confirmação).',
+    latency: DEFAULT_LATENCY,
+    flags: { priceChangeAtCheckout: true },
+  },
+  'sold-out-at-checkout': {
+    description: 'A edição do primeiro item esgota no momento do envio do pedido.',
+    latency: DEFAULT_LATENCY,
+    flags: { soldOutAtCheckout: true },
+  },
+  'payment-declined': {
+    description: 'O pedido é criado como pendente e depois recusado pela rede.',
+    latency: DEFAULT_LATENCY,
+    flags: { paymentDeclined: true },
+  },
+  'order-timeout': {
+    description:
+      'O primeiro envio do pedido cria o pedido, mas a resposta demora além do timeout do cliente (recuperação por idempotência).',
+    latency: DEFAULT_LATENCY,
+    flags: { orderTimeout: true },
+  },
+  'wallet-rejected': {
+    description: 'A carteira recusa a conexão.',
+    latency: DEFAULT_LATENCY,
+    flags: { walletRejected: true },
+  },
+  'wallet-disconnects': {
+    description: 'A carteira se desconecta no primeiro envio do pedido.',
+    latency: DEFAULT_LATENCY,
+    flags: { walletDisconnects: true },
   },
   'session-expired': {
     description:

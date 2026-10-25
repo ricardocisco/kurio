@@ -1,5 +1,7 @@
 import { Link, useRouterState } from '@tanstack/react-router';
-import { HeartIcon, HouseIcon, ScanLineIcon, ShoppingCartIcon, UserIcon } from 'lucide-react';
+import { HeartIcon, HouseIcon, ScanLineIcon, UserIcon } from 'lucide-react';
+
+import { CartLink } from '@/features/cart/components/CartLink';
 
 import { cn } from '@/shared/lib/cn';
 
@@ -45,14 +47,7 @@ export function MobileTabBar() {
           </Link>
         </li>
         <li>
-          <Link
-            to="/cart"
-            className={tabClass}
-            aria-current={pathname === '/cart' ? 'page' : undefined}
-          >
-            <ShoppingCartIcon className="size-5" aria-hidden="true" />
-            <span className="sr-only">Carrinho</span>
-          </Link>
+          <CartLink className={tabClass} isCurrent={pathname === '/cart'} />
         </li>
         <li>
           <Link

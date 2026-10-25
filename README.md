@@ -7,7 +7,7 @@ React + TypeScript com TanStack Router/Query, Axios, Socket.IO, Tailwind CSS, sh
 - Arquitetura, contratos e decisões: [`ARCHITECTURE.md`](ARCHITECTURE.md)
 - Cenários e controle dos mocks: [`docs/MOCKS.md`](docs/MOCKS.md)
 
-> Status: **fundação, catálogo, detalhe do NFT, autenticação e favoritos funcionando** (58 testes E2E). As demais telas já existem nas rotas e informam que estão em desenvolvimento. Demo: https://kurio-six.vercel.app
+> Status: **todas as telas do escopo implementadas** (106 testes E2E). Próximas fases: tempo real com Socket.IO, polimento, performance e documentação final. Demo: https://kurio-six.vercel.app
 
 ## Requisitos
 
@@ -56,19 +56,25 @@ Na primeira execução do Playwright, instale o navegador: `npx playwright insta
 
 Selecione pela URL (vale para a aba inteira): `http://localhost:5173/?scenario=slow`.
 
-| Cenário            | Efeito                                                     |
-| ------------------ | ---------------------------------------------------------- |
-| `default`          | Sucesso com latência curta e variável (80–260 ms)          |
-| `instant`          | Sem latência                                               |
-| `slow`             | 2,5 s por resposta (skeletons)                             |
-| `variable-latency` | 100 ms a 2 s, determinístico                               |
-| `out-of-order`     | Listagem alterna 1,5 s e 150 ms (respostas fora de ordem)  |
-| `offline`          | Toda requisição falha na rede                              |
-| `server-error`     | Listagem responde 503 duas vezes e depois se recupera      |
-| `catalog-down`     | Listagem sempre responde 500                               |
-| `favorite-failure` | Incluir/remover favorito falha com 503 (rollback otimista) |
-| `session-expired`  | Expira a sessão ativa ao abrir a página                    |
-| `empty-catalog`    | Catálogo vazio                                             |
+| Cenário                    | Efeito                                                                                    |
+| -------------------------- | ----------------------------------------------------------------------------------------- |
+| `default`                  | Sucesso com latência curta e variável (80–260 ms)                                         |
+| `instant`                  | Sem latência                                                                              |
+| `slow`                     | 2,5 s por resposta (skeletons)                                                            |
+| `variable-latency`         | 100 ms a 2 s, determinístico                                                              |
+| `out-of-order`             | Listagem alterna 1,5 s e 150 ms (respostas fora de ordem)                                 |
+| `offline`                  | Toda requisição falha na rede                                                             |
+| `server-error`             | Listagem responde 503 duas vezes e depois se recupera                                     |
+| `catalog-down`             | Listagem sempre responde 500                                                              |
+| `favorite-failure`         | Incluir/remover favorito falha com 503 (rollback otimista)                                |
+| `price-change-at-checkout` | O preço sobe no envio do pedido (exige nova confirmação)                                  |
+| `sold-out-at-checkout`     | A edição esgota no envio do pedido                                                        |
+| `payment-declined`         | O pedido fica pendente e depois é recusado                                                |
+| `order-timeout`            | O primeiro envio demora além do timeout; o pedido é recuperado pela chave de idempotência |
+| `wallet-rejected`          | A carteira recusa a conexão                                                               |
+| `wallet-disconnects`       | A carteira se desconecta no primeiro envio                                                |
+| `session-expired`          | Expira a sessão ativa ao abrir a página                                                   |
+| `empty-catalog`            | Catálogo vazio                                                                            |
 
 Pelo console do navegador:
 
@@ -103,7 +109,12 @@ Também é possível criar contas novas em `/register`. As senhas ficam no mock 
 3. **Retorno ao fluxo:** acesse `/account/profile` deslogado, faça login e volte para a mesma página.
 4. **Expiração:** logado, rode `__kurioMocks.expireSessions()` no console e navegue para uma página privada (ou abra `?scenario=session-expired`).
 5. **Troca de usuário:** saia pelo menu da conta e entre com o outro usuário.
-6. **Rollback de favorito:** entre com `?scenario=favorite-failure` e clique no coração: ele marca na hora e volta ao estado anterior com um aviso de erro.
+6. **Cupons:** `KURIO10` (10%) e `GENESIS5` (5%) são válidos, `VERAO25` está expirado e qualquer outro código é inválido.
+7. **Preço e estoque alterados:** com itens no carrinho, rode `__kurioMocks.setEditionPrice('emerald-ape-0042', 'emerald-ape-0042-1-50', '1.29')` ou `__kurioMocks.setEditionAvailability('ivory-baron-0088', 'ivory-baron-0088-1-50', 4)` e recarregue o carrinho.
+8. **Compra:** entre como Nova, abra `/checkout`, clique em "Confirmar compra", conecte a carteira e pague. O pedido fica pendente por ~2,5 s e abre o recibo.
+9. **Falhas de compra:** repita com `?scenario=price-change-at-checkout`, `sold-out-at-checkout`, `payment-declined`, `order-timeout`, `wallet-rejected` ou `wallet-disconnects`. Recarregar a página com um pedido pendente retoma o mesmo pedido.
+10. **Perfil e carteiras:** em `/account/profile` e `/account/wallets`. Tente o usuário `rafa.lima` (conflito), um endereço `0x123` (inválido) ou a senha atual errada.
+11. **Rollback de favorito:** entre com `?scenario=favorite-failure` e clique no coração: ele marca na hora e volta ao estado anterior com um aviso de erro.
 
 ## Deploy
 

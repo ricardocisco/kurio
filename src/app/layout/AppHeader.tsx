@@ -1,7 +1,8 @@
 import { Link, useRouterState } from '@tanstack/react-router';
-import { LogInIcon, ShoppingCartIcon } from 'lucide-react';
+import { LogInIcon } from 'lucide-react';
 
 import { UserMenu } from '@/features/auth/components/UserMenu';
+import { CartLink } from '@/features/cart/components/CartLink';
 import { useSession } from '@/features/auth/hooks/use-session';
 import { Logo } from '@/shared/components/Logo';
 import { useComingSoon } from '@/shared/hooks/use-coming-soon';
@@ -57,11 +58,10 @@ export function AppHeader() {
 
         <div className="flex items-center gap-2">
           <HeaderSearch />
-          <Button asChild variant="ghost" size="icon" className="relative text-foreground">
-            <Link to="/cart" aria-label="Carrinho">
-              <ShoppingCartIcon className="size-5" aria-hidden="true" />
-            </Link>
-          </Button>
+          <CartLink
+            isCurrent={pathname === '/cart'}
+            className="flex size-10 items-center justify-center rounded-md text-foreground transition-colors hover:bg-accent"
+          />
           {isResolving ? (
             <span className="ml-2 h-8 w-24" aria-hidden="true" />
           ) : user ? (

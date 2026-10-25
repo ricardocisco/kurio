@@ -10,6 +10,12 @@ export type MockScenario =
   | 'server-error'
   | 'catalog-down'
   | 'favorite-failure'
+  | 'price-change-at-checkout'
+  | 'sold-out-at-checkout'
+  | 'payment-declined'
+  | 'order-timeout'
+  | 'wallet-rejected'
+  | 'wallet-disconnects'
   | 'session-expired'
   | 'empty-catalog';
 
@@ -34,6 +40,8 @@ declare global {
       getScenario: () => string;
       reset: () => void;
       expireSessions: () => void;
+      setEditionPrice: (nftId: string, editionId: string, price: string) => void;
+      setEditionAvailability: (nftId: string, editionId: string, available: number) => void;
     };
   }
 }

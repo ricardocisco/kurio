@@ -11,7 +11,7 @@ import {
 import { Button } from '@/shared/ui/button';
 
 import { useRegister } from '../hooks/use-auth-actions';
-import { applyServerErrors } from '../model/apply-server-errors';
+import { applyServerErrors } from '@/shared/forms/apply-server-errors';
 
 import { AuthField } from './AuthField';
 import { FormAlert } from './FormAlert';

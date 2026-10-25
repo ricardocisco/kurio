@@ -9,7 +9,7 @@ import { describeQuantityLimit, getQuantityLimit, isEditionAvailable } from '../
 
 import { EditionSelector } from './EditionSelector';
 import { NftShareLinks } from './NftShareLinks';
-import { DesktopPurchaseActions, PURCHASE_UNAVAILABLE_NOTE } from './PurchaseActions';
+import { DesktopPurchaseActions } from './PurchaseActions';
 
 interface NftPurchasePanelProps {
   nft: NftDetail;
@@ -18,7 +18,6 @@ interface NftPurchasePanelProps {
   onQuantityChange: (quantity: number) => void;
   onEditionChange: (editionId: string) => void;
   shareUrl: string;
-  noteId: string;
 }
 
 export function NftPurchasePanel({
@@ -28,7 +27,6 @@ export function NftPurchasePanel({
   onQuantityChange,
   onEditionChange,
   shareUrl,
-  noteId,
 }: NftPurchasePanelProps) {
   const aboutId = useId();
   const limit = getQuantityLimit(edition);
@@ -79,11 +77,8 @@ export function NftPurchasePanel({
             isAvailable && quantity >= limit.max ? describeQuantityLimit(limit) : undefined
           }
         />
-        <DesktopPurchaseActions noteId={noteId} nft={nft} />
+        <DesktopPurchaseActions nft={nft} edition={edition} quantity={quantity} />
       </div>
-      <p id={noteId} className="text-xs text-muted-foreground italic">
-        {PURCHASE_UNAVAILABLE_NOTE}
-      </p>
 
       <dl className="grid gap-2 text-sm text-muted-foreground md:text-xs">
         <div className="flex gap-1">

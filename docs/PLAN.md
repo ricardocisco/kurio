@@ -117,16 +117,34 @@ Convenções:
    - [x] Sessão por token recuperada após refresh; guard `_authenticated` com `redirect` de volta.
    - [x] Expiração durante a navegação (guard revalida) e em qualquer chamada (listener de 401), com aviso e retomada.
    - [x] Logout e troca de usuário limpam o cache privado (`['private', userId, ...]`).
-   - [ ] Expiração durante o checkout preservando o pedido em andamento (junto com a fase 2.6).
+   - [x] Expiração durante o checkout preservando o pedido em andamento (rascunho em `sessionStorage`).
 4. **Favoritos** ✅
    - [x] `GET/PUT/DELETE /me/favorites` com autenticação; dados isolados por usuário.
    - [x] Atualização otimista com rollback e aviso de erro (cenário `favorite-failure`).
    - [x] Coração nos cards, no detalhe (desktop e mobile) e página "Lista de interesse" (`/account/favorites`).
    - [x] Visitante é levado ao login e volta para a mesma página.
-5. **Carrinho**: carrinho de visitante local, merge no login, cupom, resumo vindo da API.
-6. **Checkout**: cotação revalidada, chave de idempotência em `sessionStorage`, pedido pendente recuperável.
-7. **Confirmação**: recibo como snapshot do pedido.
-8. **Perfil e carteiras**: formulários com erros da API, avatar, senha.
+5. **Carrinho** ✅
+   - [x] Carrinho no servidor simulado para visitante (`X-Guest-Cart-Id`) e para a conta; união automática no login.
+   - [x] Incluir, alterar e remover respeitando estoque e limite por pedido (409/422 da API).
+   - [x] Cupom válido, inválido e expirado (`KURIO10`, `GENESIS5`, `VERAO25`); resumo calculado pela API.
+   - [x] Avisos por item: preço alterado, estoque insuficiente, esgotado; checkout bloqueado até resolver.
+   - [x] Botão "Comprar" do detalhe ligado ao carrinho.
+6. **Checkout** ✅
+   - [x] Formulário do colecionador validado (zod + react-hook-form) com rascunho salvo para retomada.
+   - [x] Carteiras cadastradas ou "usar outra carteira", rede e tipo de carteira; conexão, recusa e desconexão simuladas pela API.
+   - [x] Cotação (`POST /checkout/quotes`) revisada antes do pagamento; mudança de preço, cupom, taxa ou estoque exige nova confirmação.
+   - [x] `POST /orders` com `Idempotency-Key`: clique duplo e timeout recuperam o mesmo pedido; mesma chave com outro conteúdo gera 409.
+   - [x] Pedido pendente acompanhado por polling e retomado após refresh; confirmado e recusado são finais.
+   - [x] Após confirmar, o servidor baixa o estoque e remove do carrinho só as quantidades compradas.
+7. **Confirmação** ✅
+   - [x] Recibo (`/orders/:id`) igual ao modal do Figma, gerado só do snapshot do pedido.
+   - [x] Estados pendente e recusado na mesma rota; pedido de outro usuário responde 404.
+8. **Perfil e carteiras** ✅
+   - [x] Área da conta com o menu lateral do Figma (vira navegação horizontal no mobile).
+   - [x] Edição de nome, usuário, e-mail e ENS, com conflitos da API nos campos; o header reflete a mudança na hora.
+   - [x] Avatar: envio (recorte quadrado 256 px em WebP), persistência e remoção.
+   - [x] Troca de senha validando a senha atual (hash + salt no mock).
+   - [x] Carteira principal e secundária (cópia da principal, edição e remoção), usadas no checkout.
 
 ### Fase 3: Tempo real
 
@@ -150,12 +168,12 @@ Convenções:
 2. [x] Acesso direto ao detalhe e NFT inexistente (mais edições, limites, avaliações e voltar ao catálogo).
 3. [x] Cadastro, login, expiração, logout e troca de usuário.
 4. [x] Favoritos com falha de mutation e rollback.
-5. [ ] Carrinho: quantidades, remoção, cupom, persistência após refresh e login.
-6. [ ] Compra completa até o recibo.
-7. [ ] Pagamento recusado, clique repetido e timeout com recuperação do mesmo pedido.
-8. [ ] Perfil, avatar, senha e carteiras com erros de validação.
-9. [ ] Preço/disponibilidade alterados via Socket.IO durante o checkout.
-10. [ ] Eventos duplicados ou antigos, desconexão e retomada de pedido pendente.
+5. [x] Carrinho: quantidades, remoção, cupom, persistência após refresh e login.
+6. [x] Compra completa até o recibo.
+7. [x] Pagamento recusado, clique repetido e timeout com recuperação do mesmo pedido.
+8. [x] Perfil, avatar, senha e carteiras com erros de validação.
+9. [ ] Preço/disponibilidade alterados via Socket.IO durante o checkout. _(revalidação REST já coberta; falta o evento)_
+10. [ ] Eventos duplicados ou antigos, desconexão e retomada de pedido pendente. _(retomada após refresh já coberta)_
 11. [ ] Teclado, foco de dialogs e validação de formulários. _(dialog de login e formulários de conta cobertos)_
 12. [x] Skeletons em rede lenta, erro e nova tentativa (catálogo; repetir nas próximas telas).
 

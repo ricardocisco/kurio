@@ -80,9 +80,11 @@ export const authHandlers = [
       displayName: username,
       email,
       avatarUrl: null,
+      ensName: null,
       passwordSalt,
       passwordHash: await hashPassword(password, passwordSalt),
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
     updateDatabase((draft) => {
       draft.users.push(user);

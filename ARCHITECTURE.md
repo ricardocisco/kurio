@@ -129,6 +129,67 @@ Próximos contratos (sessão, favoritos, carrinho, cotação, pedidos, perfil, c
 - **Formulários:** os mesmos schemas zod validam no cliente (react-hook-form) e no mock. Erros da API chegam em `fieldErrors` e são aplicados ao campo correspondente (com foco no primeiro); os demais aparecem em um alerta do formulário.
 - **Login social e "Esqueceu a senha?":** fora do escopo; informam indisponibilidade.
 
+## Perfil e carteiras
+
+| Método   | Rota                                                                                          | Resposta  | Erros                                                          |
+| -------- | --------------------------------------------------------------------------------------------- | --------- | -------------------------------------------------------------- |
+| `GET`    | `/api/me/profile`                                                                             | `Profile` | 401                                                            |
+| `PATCH`  | `/api/me/profile`                                                                             | `Profile` | 422, 409 `USERNAME_ALREADY_TAKEN` / `EMAIL_ALREADY_REGISTERED` |
+| `PUT`    | `/api/me/avatar` (`{ dataUrl }`, até 300 KB)                                                  | `Profile` | 422                                                            |
+| `DELETE` | `/api/me/avatar`                                                                              | `Profile` | —                                                              |
+| `PUT`    | `/api/me/password`                                                                            | 204       | 422 (senha atual incorreta, regras da nova senha)              |
+| `PUT`    | `/api/me/wallets/primary`                                                                     | `Wallet`  | 422 (endereço inválido para a rede)                            |
+| `PUT`    | `/api/me/wallets/secondary` (`{ sameAsPrimary: true }` ou `{ sameAsPrimary: false, wallet }`) | `Wallet`  | 422 (sem carteira principal, dados inválidos)                  |
+| `DELETE` | `/api/me/wallets/secondary`                                                                   | 204       | —                                                              |
+
+- Perfil e carteiras ficam em `['private', userId, 'profile' | 'wallets']`; o checkout usa a mesma query de carteiras, então uma edição aparece no pagamento sem recarregar.
+- Salvar o perfil ou o avatar também atualiza o usuário da query de sessão, então header e menu mostram o novo nome/avatar na hora.
+- O avatar é recortado e reduzido no navegador (canvas, 256 px, WebP) antes do envio, para caber no limite da API e no `localStorage` do mock.
+- Validação de endereço por rede: `0x` + 40 hexadecimais para Ethereum/Polygon, base58 para Solana. Os mesmos schemas validam formulário e mock.
+
+## Checkout e pedidos
+
+| Método   | Rota                                     | Resposta                                | Erros                                                                                                                                              |
+| -------- | ---------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`    | `/api/me/wallets`                        | `Wallets`                               | 401                                                                                                                                                |
+| `POST`   | `/api/checkout/quotes`                   | `CheckoutQuote` (201, válida por 5 min) | 409 `AVAILABILITY_CONFLICT`, 422 (carrinho vazio)                                                                                                  |
+| `POST`   | `/api/checkout/wallet-connections`       | `WalletConnection` (201)                | 403 `WALLET_REJECTED`, 422 (endereço inválido)                                                                                                     |
+| `DELETE` | `/api/checkout/wallet-connections/:id`   | 204                                     | —                                                                                                                                                  |
+| `POST`   | `/api/orders` (header `Idempotency-Key`) | `Order` (201 novo, 200 repetição)       | 409 `QUOTE_OUTDATED` (com a cotação nova em `details.quote`), 409 `AVAILABILITY_CONFLICT`, 409 `WALLET_DISCONNECTED`, 409 `IDEMPOTENCY_KEY_REUSED` |
+| `GET`    | `/api/orders/:id`                        | `Order`                                 | 404 (inexistente ou de outro usuário)                                                                                                              |
+
+**Fluxo** (`useCheckoutFlow`, máquina de estados: `idle → quoting → review → submitting → pending → confirmed | declined`, com `failed` para erros):
+
+1. "Confirmar compra" valida o formulário e cria uma **cotação**: preços atuais, cupom, taxa e total congelados por 5 minutos. A revisão mostra exatamente essa cotação.
+2. O usuário **conecta a carteira** (simulada pela API: pode ser recusada) e pode desconectá-la. "Confirmar e pagar" só fica disponível com a carteira conectada.
+3. **Envio:** `POST /orders` com uma `Idempotency-Key` gerada para aquela combinação de cotação, conexão e dados. O servidor recalcula o carrinho e compara com a cotação. Se algo mudou (preço, cupom, taxa, quantidade) ou a cotação expirou, responde `QUOTE_OUTDATED` com uma cotação nova; a interface destaca os itens alterados e exige "Confirmar novos valores e pagar" (com uma chave nova, pois o conteúdo mudou).
+4. **Falhas transitórias** (timeout, rede, 5xx) reenviam automaticamente a mesma requisição com a mesma chave, até 3 tentativas, avisando "Verificando o mesmo pedido, sem criar outra compra". O servidor devolve o pedido já criado. O botão fica bloqueado durante o envio e um _ref_ impede envios concorrentes; mesmo um clique duplo que escape gera no máximo um pedido.
+5. **Pendente:** o pedido nasce `pending` e é resolvido pelo servidor após ~2,5 s (`confirmed` ou, no cenário `payment-declined`, `declined`). O cliente acompanha por polling de 1 s (a fase 3 adiciona `order.updated` por Socket.IO). Estados finais não mudam mais.
+6. **Recuperação:** a tentativa (`chave + requisição + orderId`) fica no `localStorage`, por usuário. Ao recarregar a página, o checkout retoma o pedido pendente ou reenvia a mesma requisição com a mesma chave, sem duplicar a compra.
+7. **Confirmação:** só com `status: confirmed` vindo da API o usuário vai para o recibo. O servidor baixa o estoque e remove do carrinho **apenas as quantidades compradas** (itens adicionados durante o processamento permanecem). Em recusa ou erro, o carrinho fica intacto.
+8. **Sessão expirada:** os dados do formulário ficam em `sessionStorage` (por usuário). O 401 leva ao login com `reason=expired` e o retorno ao `/checkout` restaura o rascunho.
+
+**Recibo:** renderizado só a partir do `Order` (snapshot de itens, preços, cupom, taxa, total, carteira e transação). Mudanças posteriores no catálogo não alteram o recibo. Hash e link do explorador são simulados.
+
+## Carrinho
+
+| Método   | Rota                      | Resposta                                          | Erros                                                     |
+| -------- | ------------------------- | ------------------------------------------------- | --------------------------------------------------------- |
+| `GET`    | `/api/cart`               | `Cart`                                            | 401 (sessão inválida)                                     |
+| `POST`   | `/api/cart/items`         | `Cart`                                            | 404, 409 `AVAILABILITY_CONFLICT`, 422 (limite por pedido) |
+| `PATCH`  | `/api/cart/items/:lineId` | `Cart` (`quantity` e/ou `acknowledgePriceChange`) | 404, 409, 422                                             |
+| `DELETE` | `/api/cart/items/:lineId` | `Cart`                                            | —                                                         |
+| `PUT`    | `/api/cart/coupon`        | `Cart`                                            | 422 `COUPON_INVALID` / `COUPON_EXPIRED`                   |
+| `DELETE` | `/api/cart/coupon`        | `Cart`                                            | —                                                         |
+| `POST`   | `/api/cart/merge`         | `Cart` (com aviso `lines-merged`)                 | 401                                                       |
+
+- **Dono do carrinho:** com sessão, o carrinho é da conta (`['private', userId, 'cart']`); sem sessão, é um carrinho de visitante no servidor simulado, identificado por um UUID salvo no navegador e enviado no header `X-Guest-Cart-Id` (`['cart', 'guest', id]`). Assim o carrinho sobrevive a refresh nos dois casos e a API é a mesma.
+- **União no login:** o `CartSessionSync` (montado na raiz) detecta o usuário recém-autenticado com um carrinho de visitante e chama `POST /cart/merge`. Quantidades repetidas são somadas e limitadas ao estoque e ao máximo por pedido; o carrinho de visitante é descartado depois.
+- **Fonte da verdade:** toda mutation devolve o carrinho completo, calculado pela API (preço atual de cada edição, subtotal, desconto, taxa de rede e total), e a resposta substitui o cache. O cliente não soma valores.
+- **Taxa de rede:** 0.01 ETH + 0.002 ETH por item distinto (reproduz os 0.016 ETH do Figma com 3 itens).
+- **Avisos por item:** `price-changed` (preço atual diferente do preço quando o item entrou; resolvido com "Entendi"), `insufficient-stock` ("Ajustar quantidade") e `sold-out` ("Remover"). Estoque insuficiente ou esgotado bloqueia o checkout (`hasBlockingIssues`). Diminuir uma quantidade é sempre permitido, para o usuário conseguir resolver o aviso.
+- Os controles `__kurioMocks.setEditionPrice` e `setEditionAvailability` alteram o servidor simulado; na fase 3 eles também emitirão `nft.updated` pelo Socket.IO.
+
 ## Favoritos (atualização otimista)
 
 | Método   | Rota                       | Resposta                                   | Erros    |

@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { UpcomingFeaturePage } from '@/shared/components/UpcomingFeaturePage';
+import { CartPage } from '@/features/cart/pages/CartPage';
 
 export const Route = createFileRoute('/cart')({
+  staticData: { mobileNavigation: 'none', hideFooterOnMobile: true },
   head: () => ({ meta: [{ title: 'Carrinho de NFTs · Kurio' }] }),
-  component: () => <UpcomingFeaturePage title="Carrinho de NFTs" phase="fase 2.5" />,
+  component: CartPage,
 });

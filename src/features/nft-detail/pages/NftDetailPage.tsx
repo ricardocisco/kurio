@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { useId, useState } from 'react';
+import { useState } from 'react';
 
 import { nftDetailQueryOptions } from '@/features/nfts/api/nft.queries';
 import { Breadcrumbs } from '@/shared/components/Breadcrumbs';
@@ -20,7 +20,6 @@ interface NftDetailPageProps {
 
 export function NftDetailPage({ nftId, selectedEditionId, onEditionChange }: NftDetailPageProps) {
   const { data: nft } = useSuspenseQuery(nftDetailQueryOptions(nftId));
-  const noteId = useId();
   const [requestedQuantity, setRequestedQuantity] = useState(1);
 
   const edition = resolveSelectedEdition(nft, selectedEditionId);
@@ -53,7 +52,6 @@ export function NftDetailPage({ nftId, selectedEditionId, onEditionChange }: Nft
               onQuantityChange={setRequestedQuantity}
               onEditionChange={handleEditionChange}
               shareUrl={`${window.location.origin}/nfts/${nft.id}`}
-              noteId={noteId}
             />
           </div>
         </div>
@@ -65,7 +63,6 @@ export function NftDetailPage({ nftId, selectedEditionId, onEditionChange }: Nft
         edition={edition}
         quantity={quantity}
         onQuantityChange={setRequestedQuantity}
-        noteId={noteId}
       />
     </>
   );

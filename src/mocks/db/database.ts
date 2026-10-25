@@ -1,10 +1,15 @@
+import type { CheckoutQuote, WalletConnection } from '@/shared/contracts/checkout';
 import type { NftDetail } from '@/shared/contracts/nft';
+import type { Order } from '@/shared/contracts/orders';
+import type { Wallet } from '@/shared/contracts/wallets';
 
+import { createCartFixtures } from '../fixtures/carts';
 import { createNftFixtures } from '../fixtures/nfts';
 import { createUserFixtures, type UserRecord } from '../fixtures/users';
+import { createWalletFixtures } from '../fixtures/wallets';
 
 const STORAGE_KEY = 'kurio.mocks.db';
-const SCHEMA_VERSION = 4;
+const SCHEMA_VERSION = 7;
 
 export interface DatabaseState {
   schemaVersion: number;
@@ -13,6 +18,51 @@ export interface DatabaseState {
   users: UserRecord[];
   sessions: SessionRecord[];
   favorites: Record<string, FavoriteRecord[]>;
+  carts: Record<string, CartRecord>;
+  wallets: Record<string, Wallet[]>;
+  walletConnections: Record<string, WalletConnectionRecord>;
+  quotes: Record<string, QuoteRecord>;
+  orders: Record<string, OrderRecord>;
+  idempotencyKeys: Record<string, IdempotencyRecord>;
+}
+
+export interface WalletConnectionRecord {
+  userId: string;
+  connection: WalletConnection;
+}
+
+export interface QuoteRecord {
+  userId: string;
+  fingerprint: string;
+  quote: CheckoutQuote;
+}
+
+export interface OrderRecord {
+  userId: string;
+  order: Order;
+  resolveAt: string;
+  outcome: 'confirmed' | 'declined';
+}
+
+export interface IdempotencyRecord {
+  orderId: string;
+  requestHash: string;
+}
+
+export interface CartLineRecord {
+  id: string;
+  nftId: string;
+  editionId: string;
+  quantity: number;
+  priceAtAdd: string;
+}
+
+export interface CartRecord {
+  id: string;
+  lines: CartLineRecord[];
+  couponCode: string | null;
+  version: number;
+  updatedAt: string;
 }
 
 export interface FavoriteRecord {
@@ -35,6 +85,12 @@ function createInitialState(): DatabaseState {
     newsletterSubscribers: [],
     users: createUserFixtures(),
     sessions: [],
+    carts: createCartFixtures(),
+    wallets: createWalletFixtures(),
+    walletConnections: {},
+    quotes: {},
+    orders: {},
+    idempotencyKeys: {},
     favorites: {
       'user-nova': [{ nftId: 'golden-beat-0207', addedAt: '2026-09-20T12:00:00.000Z' }],
     },

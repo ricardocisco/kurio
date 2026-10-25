@@ -11,7 +11,6 @@ interface MobilePurchaseBarProps {
   edition: NftEdition;
   quantity: number;
   onQuantityChange: (quantity: number) => void;
-  noteId: string;
 }
 
 export function MobilePurchaseBar({
@@ -19,7 +18,6 @@ export function MobilePurchaseBar({
   edition,
   quantity,
   onQuantityChange,
-  noteId,
 }: MobilePurchaseBarProps) {
   const limit = getQuantityLimit(edition);
   const isAvailable = isEditionAvailable(edition);
@@ -51,7 +49,7 @@ export function MobilePurchaseBar({
           {describeQuantityLimit(limit)}
         </p>
       )}
-      <MobilePurchaseActions noteId={noteId} />
+      <MobilePurchaseActions nft={nft} edition={edition} quantity={quantity} />
     </div>
   );
 }

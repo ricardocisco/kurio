@@ -8,6 +8,7 @@ import {
 } from './config/scenarios';
 import { resetDatabase } from './db/database';
 import { expireAllSessions } from './utils/auth';
+import { updateEdition } from './utils/catalog-mutations';
 
 export interface MockControl {
   scenarios: Record<ScenarioName, string>;
@@ -15,6 +16,8 @@ export interface MockControl {
   setScenario: (name: string) => void;
   reset: () => void;
   expireSessions: () => void;
+  setEditionPrice: (nftId: string, editionId: string, price: string) => void;
+  setEditionAvailability: (nftId: string, editionId: string, available: number) => void;
 }
 
 export function createMockControl(): MockControl {
@@ -32,6 +35,12 @@ export function createMockControl(): MockControl {
       resetNetworkSimulation();
     },
     expireSessions: expireAllSessions,
+    setEditionPrice: (nftId, editionId, price) => {
+      updateEdition({ nftId, editionId, price });
+    },
+    setEditionAvailability: (nftId, editionId, available) => {
+      updateEdition({ nftId, editionId, available });
+    },
   };
 }
 

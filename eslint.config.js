@@ -56,6 +56,7 @@ export default defineConfig([
         },
       ],
       eqeqeq: ['error', 'always'],
+      'jsx-a11y/label-has-associated-control': ['error', { assert: 'either', depth: 4 }],
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
     },
   },

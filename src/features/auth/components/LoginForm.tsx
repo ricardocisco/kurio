@@ -7,7 +7,7 @@ import { useComingSoon } from '@/shared/hooks/use-coming-soon';
 import { Button } from '@/shared/ui/button';
 
 import { useLogin } from '../hooks/use-auth-actions';
-import { applyServerErrors } from '../model/apply-server-errors';
+import { applyServerErrors } from '@/shared/forms/apply-server-errors';
 
 import { AuthField } from './AuthField';
 import { FormAlert } from './FormAlert';
