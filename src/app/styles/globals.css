@@ -1,0 +1,161 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@fontsource/roboto-mono/400.css';
+@import '@fontsource/roboto-mono/500.css';
+@import '@fontsource/roboto-mono/700.css';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design tokens sampled from the Figma "Frontend Challenge" prototype (Kurio).
+ * Every color in the UI must come from these tokens; never hardcode hex values in components.
+ */
+:root {
+  --radius: 0.375rem;
+
+  /* Brand palette */
+  --kurio-950: #150c0a;
+  --kurio-900: #1c1210;
+  --kurio-850: #241613;
+  --kurio-800: #2e1d18;
+  --kurio-750: #3a200f;
+  --kurio-700: #4a3127;
+  --kurio-copper: #d08a4c;
+  --kurio-copper-strong: #e09a5c;
+  --kurio-copper-deep: #b57742;
+  --kurio-cream: #fdf9f5;
+  --kurio-sand: #e8e0d8;
+  --kurio-tan: #bfa58c;
+
+  /* Semantic tokens (shadcn/ui contract) */
+  --background: var(--kurio-950);
+  --foreground: var(--kurio-cream);
+  --card: var(--kurio-850);
+  --card-foreground: var(--kurio-cream);
+  --popover: var(--kurio-850);
+  --popover-foreground: var(--kurio-cream);
+  --primary: var(--kurio-copper);
+  --primary-foreground: #1a0f0a;
+  --secondary: var(--kurio-800);
+  --secondary-foreground: var(--kurio-cream);
+  --muted: var(--kurio-900);
+  --muted-foreground: var(--kurio-tan);
+  --accent: var(--kurio-800);
+  --accent-foreground: var(--kurio-cream);
+  --destructive: #f07a62;
+  --destructive-foreground: #1a0f0a;
+  --success: #8fcf8a;
+  --warning: #f2c46d;
+  --border: var(--kurio-700);
+  --input: var(--kurio-700);
+  --ring: var(--kurio-copper);
+
+  --surface-band: var(--kurio-750);
+  --text-secondary: var(--kurio-sand);
+}
+
+@theme inline {
+  --font-sans: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-strong: var(--kurio-copper-strong);
+  --color-primary-deep: var(--kurio-copper-deep);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface-band: var(--surface-band);
+  --color-text-secondary: var(--text-secondary);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 10px);
+  --radius-2xl: calc(var(--radius) + 18px);
+
+  --container-content: 75rem; /* 1200px content width from the desktop frames */
+  --spacing-header: 4.25rem; /* 68px */
+  --spacing-sidebar: 19.375rem; /* 310px */
+
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+@utility container-content {
+  width: 100%;
+  max-width: var(--container-content);
+  margin-inline: auto;
+  padding-inline: 1rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 1.5rem;
+  }
+
+  @media (width >= 80rem) {
+    padding-inline: 0;
+  }
+}
+
+@utility bg-primary-gradient {
+  background-image: linear-gradient(100deg, var(--kurio-copper) 0%, var(--kurio-copper-deep) 100%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    min-height: 100dvh;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  ::selection {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
