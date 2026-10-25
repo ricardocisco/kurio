@@ -4,7 +4,7 @@ import { createNftFixtures } from '../fixtures/nfts';
 import { createUserFixtures, type UserRecord } from '../fixtures/users';
 
 const STORAGE_KEY = 'kurio.mocks.db';
-const SCHEMA_VERSION = 3;
+const SCHEMA_VERSION = 4;
 
 export interface DatabaseState {
   schemaVersion: number;
@@ -12,6 +12,12 @@ export interface DatabaseState {
   newsletterSubscribers: string[];
   users: UserRecord[];
   sessions: SessionRecord[];
+  favorites: Record<string, FavoriteRecord[]>;
+}
+
+export interface FavoriteRecord {
+  nftId: string;
+  addedAt: string;
 }
 
 export interface SessionRecord {
@@ -29,6 +35,9 @@ function createInitialState(): DatabaseState {
     newsletterSubscribers: [],
     users: createUserFixtures(),
     sessions: [],
+    favorites: {
+      'user-nova': [{ nftId: 'golden-beat-0207', addedAt: '2026-09-20T12:00:00.000Z' }],
+    },
   };
 }
 

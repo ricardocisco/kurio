@@ -33,7 +33,7 @@ export function NftDetailPage({ nftId, selectedEditionId, onEditionChange }: Nft
 
   return (
     <>
-      <MobileDetailHeader />
+      <MobileDetailHeader nft={nft} />
       <div className="container-content flex flex-col gap-10 py-4 md:gap-16 md:py-6">
         <div className="flex flex-col gap-4">
           <Breadcrumbs

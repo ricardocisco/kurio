@@ -1,6 +1,7 @@
 import { useMatches } from '@tanstack/react-router';
 import type * as React from 'react';
 
+import { LiveAnnouncer } from '@/shared/a11y/LiveAnnouncer';
 import { cn } from '@/shared/lib/cn';
 
 import { AppFooter } from './AppFooter';
@@ -38,6 +39,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
         <AppFooter />
       </div>
       {mobileNavigation === 'tab-bar' && <MobileTabBar />}
+      <LiveAnnouncer />
     </div>
   );
 }

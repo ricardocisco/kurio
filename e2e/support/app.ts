@@ -9,6 +9,7 @@ export type MockScenario =
   | 'offline'
   | 'server-error'
   | 'catalog-down'
+  | 'favorite-failure'
   | 'session-expired'
   | 'empty-catalog';
 

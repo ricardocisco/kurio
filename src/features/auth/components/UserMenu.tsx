@@ -1,5 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router';
-import { LogOutIcon, UserIcon, WalletIcon } from 'lucide-react';
+import { HeartIcon, LogOutIcon, UserIcon, WalletIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 import type { SessionUser } from '@/shared/contracts/session';
@@ -45,6 +45,12 @@ export function UserMenu({ user }: { user: SessionUser }) {
           <Link to="/account/profile">
             <UserIcon aria-hidden="true" />
             Meu perfil
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/account/favorites">
+            <HeartIcon aria-hidden="true" />
+            Lista de interesse
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

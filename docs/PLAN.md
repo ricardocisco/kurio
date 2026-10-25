@@ -118,7 +118,11 @@ Convenções:
    - [x] Expiração durante a navegação (guard revalida) e em qualquer chamada (listener de 401), com aviso e retomada.
    - [x] Logout e troca de usuário limpam o cache privado (`['private', userId, ...]`).
    - [ ] Expiração durante o checkout preservando o pedido em andamento (junto com a fase 2.6).
-4. **Favoritos**: atualização otimista com rollback (a interação otimista obrigatória).
+4. **Favoritos** ✅
+   - [x] `GET/PUT/DELETE /me/favorites` com autenticação; dados isolados por usuário.
+   - [x] Atualização otimista com rollback e aviso de erro (cenário `favorite-failure`).
+   - [x] Coração nos cards, no detalhe (desktop e mobile) e página "Lista de interesse" (`/account/favorites`).
+   - [x] Visitante é levado ao login e volta para a mesma página.
 5. **Carrinho**: carrinho de visitante local, merge no login, cupom, resumo vindo da API.
 6. **Checkout**: cotação revalidada, chave de idempotência em `sessionStorage`, pedido pendente recuperável.
 7. **Confirmação**: recibo como snapshot do pedido.
@@ -145,7 +149,7 @@ Convenções:
 1. [x] Busca, filtros combinados, ordenação, paginação e histórico (inclui respostas fora de ordem).
 2. [x] Acesso direto ao detalhe e NFT inexistente (mais edições, limites, avaliações e voltar ao catálogo).
 3. [x] Cadastro, login, expiração, logout e troca de usuário.
-4. [ ] Favoritos com falha de mutation e rollback.
+4. [x] Favoritos com falha de mutation e rollback.
 5. [ ] Carrinho: quantidades, remoção, cupom, persistência após refresh e login.
 6. [ ] Compra completa até o recibo.
 7. [ ] Pagamento recusado, clique repetido e timeout com recuperação do mesmo pedido.

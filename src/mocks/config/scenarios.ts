@@ -86,6 +86,23 @@ export const SCENARIOS = {
       },
     ],
   },
+  'favorite-failure': {
+    description:
+      'Incluir ou remover favoritos falha com 503 após 600 ms (testa o rollback otimista).',
+    latency: ({ pathname }) => (pathname.startsWith('/me/favorites/') ? 600 : DEFAULT_LATENCY.min),
+    faults: [
+      {
+        method: 'PUT',
+        path: /^\/me\/favorites\/.+$/,
+        effect: { type: 'http', status: 503, code: 'SERVICE_UNAVAILABLE' },
+      },
+      {
+        method: 'DELETE',
+        path: /^\/me\/favorites\/.+$/,
+        effect: { type: 'http', status: 503, code: 'SERVICE_UNAVAILABLE' },
+      },
+    ],
+  },
   'session-expired': {
     description:
       'Expira a sessão ativa ao abrir a página (a próxima chamada autenticada recebe 401).',

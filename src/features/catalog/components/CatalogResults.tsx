@@ -1,3 +1,4 @@
+import { FavoriteButton } from '@/features/favorites/components/FavoriteButton';
 import { NftCard, NftCardSkeleton } from '@/features/nfts/components/NftCard';
 import { isApiError } from '@/shared/api/api-error';
 import { RetryButton, StatusMessage } from '@/shared/components/StatusMessage';
@@ -116,7 +117,11 @@ export function CatalogResults({
         >
           {data.items.map((nft, index) => (
             <li key={nft.id}>
-              <NftCard nft={nft} priority={index < 3} />
+              <NftCard
+                nft={nft}
+                priority={index < 3}
+                action={<FavoriteButton nft={nft} variant="overlay" />}
+              />
             </li>
           ))}
         </ul>

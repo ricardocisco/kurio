@@ -1,7 +1,6 @@
 import { Link, useRouterState } from '@tanstack/react-router';
 import { HeartIcon, HouseIcon, ScanLineIcon, ShoppingCartIcon, UserIcon } from 'lucide-react';
 
-import { useComingSoon } from '@/shared/hooks/use-coming-soon';
 import { cn } from '@/shared/lib/cn';
 
 const tabClass =
@@ -9,7 +8,6 @@ const tabClass =
 
 export function MobileTabBar() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const showComingSoon = useComingSoon();
 
   return (
     <nav
@@ -24,10 +22,14 @@ export function MobileTabBar() {
           </Link>
         </li>
         <li>
-          <button type="button" className={tabClass} onClick={() => showComingSoon('Favoritos')}>
+          <Link
+            to="/account/favorites"
+            className={tabClass}
+            aria-current={pathname === '/account/favorites' ? 'page' : undefined}
+          >
             <HeartIcon className="size-5" aria-hidden="true" />
-            <span className="sr-only">Favoritos</span>
-          </button>
+            <span className="sr-only">Lista de interesse</span>
+          </Link>
         </li>
         <li className="-mt-10">
           <Link
@@ -56,7 +58,11 @@ export function MobileTabBar() {
           <Link
             to="/account/profile"
             className={tabClass}
-            aria-current={pathname.startsWith('/account') ? 'page' : undefined}
+            aria-current={
+              pathname.startsWith('/account') && pathname !== '/account/favorites'
+                ? 'page'
+                : undefined
+            }
           >
             <UserIcon className="size-5" aria-hidden="true" />
             <span className="sr-only">Minha conta</span>

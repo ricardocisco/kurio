@@ -129,6 +129,20 @@ Próximos contratos (sessão, favoritos, carrinho, cotação, pedidos, perfil, c
 - **Formulários:** os mesmos schemas zod validam no cliente (react-hook-form) e no mock. Erros da API chegam em `fieldErrors` e são aplicados ao campo correspondente (com foco no primeiro); os demais aparecem em um alerta do formulário.
 - **Login social e "Esqueceu a senha?":** fora do escopo; informam indisponibilidade.
 
+## Favoritos (atualização otimista)
+
+| Método   | Rota                       | Resposta                                   | Erros    |
+| -------- | -------------------------- | ------------------------------------------ | -------- |
+| `GET`    | `/api/me/favorites`        | `Favorites` (NFTs, mais recentes primeiro) | 401      |
+| `PUT`    | `/api/me/favorites/:nftId` | `FavoriteChange` (idempotente)             | 401, 404 |
+| `DELETE` | `/api/me/favorites/:nftId` | `FavoriteChange` (idempotente)             | 401      |
+
+- A lista fica em `['private', userId, 'favorites']`, então some no logout e nunca aparece para outro usuário.
+- **Fluxo otimista:** `onMutate` cancela buscas em andamento, guarda o estado anterior e aplica a mudança na hora; `onError` restaura o estado anterior e mostra um aviso; `onSettled` revalida com a API apenas quando a última mutation do grupo termina (cliques rápidos não fazem a lista "piscar").
+- `PUT`/`DELETE` são idempotentes por recurso, então repetir a operação nunca duplica o favorito.
+- A mudança é anunciada por um `LiveAnnouncer` global (`aria-live`), reutilizável pelos eventos em tempo real.
+- O `NftCard` recebe a ação por _slot_ (`action`), assim `nfts` não depende de `favorites`.
+
 ## Detalhe do NFT
 
 - **Carregamento:** o loader usa `ensureQueryData` (bloqueia a rota) e converte `NOT_FOUND` em `notFound()`, exibindo o `notFoundComponent` da rota. O `pendingComponent` (skeleton com o mesmo layout) aparece após 150 ms e fica pelo menos 400 ms, sem piscar. A página usa `useSuspenseQuery`, então continua inscrita no cache para receber atualizações (inclusive os eventos da fase 3).
@@ -160,7 +174,7 @@ Próximos contratos (sessão, favoritos, carrinho, cotação, pedidos, perfil, c
 | Rótulos "Contrato" e "Direitos autorais" (detalhe)                      | No Figma os textos estão trocados entre os rótulos; cada texto foi colocado sob o rótulo correspondente.                                                                                                                                  |
 | Compartilhar (detalhe)                                                  | Links reais de compartilhamento (LinkedIn, e-mail, X), em vez de ícones sem ação.                                                                                                                                                         |
 | "Comprar" e "Favoritar" (detalhe)                                       | Desabilitados com aviso até as fases 2.4/2.5, para não aparentar sucesso.                                                                                                                                                                 |
-| Tab bar mobile                                                          | O botão central leva ao Mercado; "Favoritos" informa indisponibilidade até a fase 2.4.                                                                                                                                                    |
+| Tab bar mobile                                                          | O botão central leva ao Mercado; o coração leva à "Lista de interesse".                                                                                                                                                                   |
 
 ## Limitações conhecidas (até aqui)
 

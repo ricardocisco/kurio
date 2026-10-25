@@ -79,7 +79,7 @@ export function NftPurchasePanel({
             isAvailable && quantity >= limit.max ? describeQuantityLimit(limit) : undefined
           }
         />
-        <DesktopPurchaseActions noteId={noteId} />
+        <DesktopPurchaseActions noteId={noteId} nft={nft} />
       </div>
       <p id={noteId} className="text-xs text-muted-foreground italic">
         {PURCHASE_UNAVAILABLE_NOTE}

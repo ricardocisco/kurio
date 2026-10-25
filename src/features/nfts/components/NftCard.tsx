@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import type { ReactNode } from 'react';
 
 import { EthPrice } from '@/shared/components/EthPrice';
 import type { NftSummary } from '@/shared/contracts/nft';
@@ -11,12 +12,19 @@ interface NftCardProps {
   nft: NftSummary;
   imageSizes?: string;
   priority?: boolean;
+  action?: ReactNode;
   className?: string;
 }
 
 const DEFAULT_SIZES = '(min-width: 1280px) 260px, (min-width: 768px) 30vw, 45vw';
 
-export function NftCard({ nft, imageSizes = DEFAULT_SIZES, priority, className }: NftCardProps) {
+export function NftCard({
+  nft,
+  imageSizes = DEFAULT_SIZES,
+  priority,
+  action,
+  className,
+}: NftCardProps) {
   return (
     <article className={cn('group relative flex flex-col gap-2', className)}>
       <div className="relative overflow-hidden rounded-xl bg-card p-2 md:rounded-sm md:p-3">
@@ -30,6 +38,11 @@ export function NftCard({ nft, imageSizes = DEFAULT_SIZES, priority, className }
           <span className="absolute top-2 left-2 bg-primary px-3 py-1 text-xs font-bold text-primary-foreground uppercase md:top-3 md:left-3">
             {nft.rarity === 'rare' ? 'Raro' : 'Lendário'}
           </span>
+        )}
+        {action && (
+          <div className="absolute top-3 right-3 z-10 transition-opacity md:top-4 md:right-4 md:opacity-0 md:group-focus-within:opacity-100 md:group-hover:opacity-100 md:has-[[aria-pressed=true]]:opacity-100">
+            {action}
+          </div>
         )}
         {nft.isSoldOut && (
           <span className="absolute right-3 bottom-3 rounded-sm bg-background/90 px-2 py-1 text-xs font-bold text-foreground">

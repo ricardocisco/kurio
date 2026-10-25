@@ -1,9 +1,10 @@
 import { useCanGoBack, useNavigate, useRouter } from '@tanstack/react-router';
-import { ChevronLeftIcon, HeartIcon } from 'lucide-react';
+import { ChevronLeftIcon } from 'lucide-react';
 
-import { PURCHASE_UNAVAILABLE_NOTE } from './PurchaseActions';
+import { FavoriteButton } from '@/features/favorites/components/FavoriteButton';
+import type { NftSummary } from '@/shared/contracts/nft';
 
-export function MobileDetailHeader() {
+export function MobileDetailHeader({ nft }: { nft: NftSummary }) {
   const router = useRouter();
   const navigate = useNavigate();
   const canGoBack = useCanGoBack();
@@ -23,15 +24,7 @@ export function MobileDetailHeader() {
       >
         <ChevronLeftIcon className="size-5" aria-hidden="true" />
       </button>
-      <button
-        type="button"
-        disabled
-        title={PURCHASE_UNAVAILABLE_NOTE}
-        className="flex size-9 items-center justify-center rounded-full bg-card text-primary disabled:opacity-60"
-        aria-label="Favoritar (em breve)"
-      >
-        <HeartIcon className="size-5" aria-hidden="true" />
-      </button>
+      <FavoriteButton nft={nft} variant="icon" />
     </div>
   );
 }

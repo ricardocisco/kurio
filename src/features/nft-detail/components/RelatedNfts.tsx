@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { FavoriteButton } from '@/features/favorites/components/FavoriteButton';
 import { relatedNftsQueryOptions } from '@/features/nfts/api/nft.queries';
 import { NftCard, NftCardSkeleton } from '@/features/nfts/components/NftCard';
 import { ScrollCarousel } from '@/shared/components/ScrollCarousel';
@@ -31,7 +32,12 @@ export function RelatedNfts({
           label={title}
           itemClassName={ITEM_CLASS}
           items={related.data.items.map((nft) => (
-            <NftCard key={nft.id} nft={nft} imageSizes={IMAGE_SIZES} />
+            <NftCard
+              key={nft.id}
+              nft={nft}
+              imageSizes={IMAGE_SIZES}
+              action={<FavoriteButton nft={nft} variant="overlay" />}
+            />
           ))}
         />
       ) : (

@@ -7,6 +7,7 @@ import { createToken } from './crypto';
 import { errorResponse } from './responses';
 
 export const SESSION_TTL_MS = 30 * 60 * 1000;
+const EXPIRED_SESSION_RETENTION_MS = 24 * 60 * 60 * 1000;
 
 export function toSessionUser(user: UserRecord): SessionUser {
   return {
@@ -25,7 +26,10 @@ export function createSession(userId: string): SessionRecord {
     expiresAt: new Date(Date.now() + SESSION_TTL_MS).toISOString(),
   };
   updateDatabase((draft) => {
-    draft.sessions = draft.sessions.filter((item) => new Date(item.expiresAt) > new Date());
+    const cleanupThreshold = Date.now() - EXPIRED_SESSION_RETENTION_MS;
+    draft.sessions = draft.sessions.filter(
+      (item) => new Date(item.expiresAt).getTime() > cleanupThreshold,
+    );
     draft.sessions.push(session);
   });
   return session;
@@ -71,7 +75,6 @@ export function authenticate(request: Request): AuthenticationResult {
   }
 
   if (new Date(session.expiresAt) <= new Date()) {
-    revokeSession(token);
     return {
       ok: false,
       response: errorResponse('SESSION_EXPIRED', 'Sua sessão expirou. Entre novamente.'),

@@ -1,21 +1,20 @@
-import { HeartIcon, ShoppingCartIcon } from 'lucide-react';
+import { ShoppingCartIcon } from 'lucide-react';
+
+import { FavoriteButton } from '@/features/favorites/components/FavoriteButton';
+import type { NftSummary } from '@/shared/contracts/nft';
 
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 
-export const PURCHASE_UNAVAILABLE_NOTE =
-  'Compra e favoritos serão liberados nas próximas etapas do projeto.';
+export const PURCHASE_UNAVAILABLE_NOTE = 'A compra será liberada junto com o carrinho.';
 
-export function DesktopPurchaseActions({ noteId }: { noteId: string }) {
+export function DesktopPurchaseActions({ noteId, nft }: { noteId: string; nft: NftSummary }) {
   return (
     <div className="flex flex-wrap gap-3">
       <Button className="min-w-32 uppercase" disabled aria-describedby={noteId}>
         Comprar
       </Button>
-      <Button variant="outline" disabled aria-describedby={noteId}>
-        <HeartIcon aria-hidden="true" />
-        Favoritar
-      </Button>
+      <FavoriteButton nft={nft} variant="button" />
     </div>
   );
 }

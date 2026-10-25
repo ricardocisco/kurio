@@ -39,12 +39,7 @@ const COLLECTION_LINKS: { label: string; category: CategoryId }[] = [
   { label: 'Utilidade', category: 'utility' },
 ];
 
-const PROFILE_PLACEHOLDERS = [
-  'Minha coleção',
-  'Atividade',
-  'Estúdio do criador',
-  'Lista de interesse',
-];
+const PROFILE_PLACEHOLDERS = ['Minha coleção', 'Atividade', 'Estúdio do criador'];
 const HELP_PLACEHOLDERS = [
   'Central de ajuda',
   'Como comprar NFTs',
@@ -127,6 +122,11 @@ export function AppFooter() {
           <li>
             <Link to="/account/profile" className={footerLinkClass}>
               Meu perfil
+            </Link>
+          </li>
+          <li>
+            <Link to="/account/favorites" className={footerLinkClass}>
+              Lista de interesse
             </Link>
           </li>
           {PROFILE_PLACEHOLDERS.map((label) => (
